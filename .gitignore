@@ -4,3 +4,5 @@ node_modules/
 outputs/
 .sites-runtime/
 bash.cmd
+pnpm-lock.yaml
+pnpm-workspace.yaml

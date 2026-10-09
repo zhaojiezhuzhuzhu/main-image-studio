@@ -486,7 +486,7 @@ snapshot=function(){return oldSnapshot().map(row=>{const b=boardByKey[row.key];r
 const oldRestore=restore;
 restore=function(rows){rows.forEach(row=>{const b=boardByKey[row.key];b.extra=(row.extra||[]).map(cloneExtra);b.textStyles={title:{...(row.textStyles?.title||{})},sub:{...(row.textStyles?.sub||{})}};b.textOffsets={title:{...(row.textOffsets?.title||{x:0,y:0})},sub:{...(row.textOffsets?.sub||{x:0,y:0})}};if(row.photoPanels!==undefined)b.photoPanels=row.photoPanels?clonePanels(row.photoPanels):null;if(row.activePanel)b.activePanel=row.activePanel});oldRestore(rows);updateToolbar();updateMain3RegionUI?.()};
 function getItem(ref){return ref?.kind==="fixed"?null:ref?.b.extra.find(x=>x.id===ref.id)}
-function syncLinkedText(source,key,value){const peer=pairedBoard(source);if(!peer||!key)return;if(key==="p2-title"&&peer.key==="portrait2"){peer.text1=value;render(peer);return}const other=peer.extra.find(it=>it.syncKey===key);if(!other)return;other.text=value;if(other.kind==="crown")reflowCrown(other);if(other.kind==="sleepMode")reflowSleepMode(other);render(peer)}
+function syncLinkedText(source,key,value){const peer=pairedBoard(source);if(!peer||!key)return;if(key==="p2-title"&&peer.key==="portrait2"){peer.text1=value;render(peer);return}const other=peer.extra.find(it=>it.syncKey===key);if(!other)return;other.text=value;if(other.kind==="crown")reflowCrown(other);if(other.kind==="sleepMode")reflowSleepMode(other);if(other.kind==="goldBadge")reflowGoldBadge(other);if(other.kind==="text")reflowTemplate2Label(peer,other);render(peer)}
 function getStyle(ref){return ref?.kind==="fixed"?ref.b.textStyles[ref.type]:getItem(ref)?.style}
 function getText(ref){return ref.kind==="fixed"?(ref.type==="title"?ref.b.text1:ref.b.text2):getItem(ref)?.text}
 function getFont(s,type){return s.font&&s.font!=="default"?s.font:fontStack(type)}
@@ -574,8 +574,8 @@ function drawGoldBadge(ctx,it){if(it.psdRaster&&it.text===it.psdText&&psdStyleMa
 function drawTemplateOutline(ctx,it){ctx.save();ctx.strokeStyle=it.style.color||"#FFFFFF";ctx.lineWidth=Number(it.style.stroke)||3;ctx.globalAlpha=it.style.opacity??1;ctx.beginPath();ctx.roundRect(0,0,it.w,it.h,Number(it.style.radius)||it.h/2);ctx.stroke();ctx.restore()}
 function componentItem(ref){const it=getItem(ref);if(!it?.componentId)return it;return ref.b.extra.find(x=>x.id===it.componentId)||it}
 function componentFrame(b,it){if(!it?.componentId)return null;return b.extra.find(x=>x.kind==="templateOutline"&&x.componentId===it.componentId)||null}
-function syncTemplate2Outline(b){if(b.key!=="portrait1")return;const frame=b.extra.find(it=>it.kind==="templateOutline"&&(it.anchorId||it.componentId)),label=frame&&b.extra.find(it=>it.id===(frame.anchorId||frame.componentId));if(!frame||!label)return;frame.componentId=label.id;label.componentId=label.id;const p=frame.padding||{left:31.78,top:13.19,right:22.53,bottom:5.5};frame.x=label.x-p.left;frame.y=label.y-p.top;frame.w=label.w+p.left+p.right;frame.h=label.h+p.top+p.bottom}
-function reflowTemplate2Label(b,it){if(templateId!=="2"||!/^portrait[1-4]$/.test(b?.key||"")||it?.kind!=="text")return;const ctx=b.canvas.getContext("2d"),s=it.style,size=Number(s.size)||80;ctx.font=(s.weight||"400")+" "+size+"px "+getFont(s,"sub");const lines=(it.text||"").split(/\r?\n/),spacing=Number(s.letterSpacing)||0,width=Math.max(...lines.map(line=>spacedWidth(ctx,line,spacing))),align=s.align||"left",left=it.x,right=Number(it.anchorRight??(it.x+it.w));it.w=Math.max(1,width);if(align!=="left")it.x=right-it.w;else it.x=left;it.h=Math.max(1,lines.length*(Number(s.lineHeight)||size*1.2));syncTemplate2Outline(b)}
+function syncTemplate2Outline(b){if(!["portrait1","square"].includes(b.key))return;const frame=b.extra.find(it=>it.kind==="templateOutline"&&(it.anchorId||it.componentId)),label=frame&&b.extra.find(it=>it.id===(frame.anchorId||frame.componentId));if(!frame||!label)return;frame.componentId=label.id;label.componentId=label.id;const p=frame.padding||{left:31.78,top:13.19,right:22.53,bottom:5.5};frame.x=label.x-p.left;frame.y=label.y-p.top;frame.w=label.w+p.left+p.right;frame.h=label.h+p.top+p.bottom}
+function reflowTemplate2Label(b,it){if(templateId!=="2"||!/^(?:portrait[1-4]|square[2-4]?)$/.test(b?.key||"")||it?.kind!=="text")return;const ctx=b.canvas.getContext("2d"),s=it.style,size=Number(s.size)||80;ctx.font=(s.weight||"400")+" "+size+"px "+getFont(s,"sub");const lines=(it.text||"").split(/\r?\n/),spacing=Number(s.letterSpacing)||0,width=Math.max(...lines.map(line=>spacedWidth(ctx,line,spacing))),align=s.align||"left",left=it.x,right=Number(it.anchorRight??(it.x+it.w));it.w=Math.max(1,width);if(align!=="left")it.x=right-it.w;else it.x=left;it.h=Math.max(1,lines.length*(Number(s.lineHeight)||size*1.2));syncTemplate2Outline(b)}
 function drawExtra(ctx,it){
  ctx.save();ctx.translate(it.x,it.y);ctx.rotate((Number(it.rotation)||0)*Math.PI/180);ctx.globalAlpha=it.style.opacity??1;
  if(it.kind==="goldBadge"){drawGoldBadge(ctx,it);ctx.restore();return}
@@ -592,9 +592,9 @@ function drawExtra(ctx,it){
  ctx.restore()
 }
 function activePhotoPanel(b){return b.photoPanels?.find(p=>p.key===(b.activePanel||"top"))||null}
-function panelAt(b,p){const panels=b.key==="portrait3"&&templateId==="2"?[...(b.photoPanels||[])].sort((a,z)=>({top:0,right:1,left:2}[a.key]??0)-({top:0,right:1,left:2}[z.key]??0)):b.photoPanels||[];return panels.find(x=>p.x>=x.x0&&p.x<=x.x0+x.w&&p.y>=x.y0&&p.y<=x.y0+x.h)||null}
+function panelAt(b,p){const panels=["portrait3","square3"].includes(b.key)&&templateId==="2"?[...(b.photoPanels||[])].sort((a,z)=>({top:0,right:1,left:2}[a.key]??0)-({top:0,right:1,left:2}[z.key]??0)):b.photoPanels||[];return panels.find(x=>p.x>=x.x0&&p.x<=x.x0+x.w&&p.y>=x.y0&&p.y<=x.y0+x.h)||null}
 function clampPhotoPanel(panel){if(!panel?.image)return;const base=Math.max(panel.w/panel.image.naturalWidth,panel.h/panel.image.naturalHeight),s=base*panel.zoom,dw=panel.image.naturalWidth*s,dh=panel.image.naturalHeight*s,mx=Math.max(0,(dw-panel.w)/2),my=Math.max(0,(dh-panel.h)/2);panel.x=Math.max(-mx,Math.min(mx,panel.x));panel.y=Math.max(-my,Math.min(my,panel.y))}
-function drawPhotoPanels(ctx,b){if(!b.photoPanels)return;const panels=b.key==="portrait3"&&templateId==="2"?[...b.photoPanels].sort((a,z)=>({top:0,right:1,left:2}[a.key]??0)-({top:0,right:1,left:2}[z.key]??0)):b.photoPanels;panels.forEach(panel=>{if(!panel.image)return;clampPhotoPanel(panel);const base=Math.max(panel.w/panel.image.naturalWidth,panel.h/panel.image.naturalHeight),s=base*panel.zoom,dw=panel.image.naturalWidth*s,dh=panel.image.naturalHeight*s,radius=Number(panel.radius)||0;ctx.save();ctx.beginPath();if(radius){ctx.roundRect(panel.x0,panel.y0,panel.w,panel.h,Math.min(radius,Math.min(panel.w,panel.h)/2))}else ctx.rect(panel.x0,panel.y0,panel.w,panel.h);ctx.clip();ctx.drawImage(panel.image,panel.x0+(panel.w-dw)/2+panel.x,panel.y0+(panel.h-dh)/2+panel.y,dw,dh);ctx.restore()});if(isSofaTemplate1&&b.key==="portrait5"){const g=ctx.createLinearGradient(0,760,0,1233);g.addColorStop(0,"rgba(0,0,0,0)");g.addColorStop(1,"rgba(0,0,0,.45)");ctx.fillStyle=g;ctx.fillRect(0,760,1440,473)}if(isSofaTemplate1&&(b.key==="portrait3"||b.key==="portrait5")){ctx.fillStyle="#FFFFFF";ctx.fillRect(0,1233,1440,25);const splitX=b.key==="portrait3"?707.5:710,splitW=b.key==="portrait3"?25:20;ctx.fillRect(splitX,1258,splitW,662)}}
+function drawPhotoPanels(ctx,b){if(!b.photoPanels)return;const panels=["portrait3","square3"].includes(b.key)&&templateId==="2"?[...b.photoPanels].sort((a,z)=>({top:0,right:1,left:2}[a.key]??0)-({top:0,right:1,left:2}[z.key]??0)):b.photoPanels;panels.forEach(panel=>{if(!panel.image)return;clampPhotoPanel(panel);const base=Math.max(panel.w/panel.image.naturalWidth,panel.h/panel.image.naturalHeight),s=base*panel.zoom,dw=panel.image.naturalWidth*s,dh=panel.image.naturalHeight*s,radius=Number(panel.radius)||0;ctx.save();ctx.beginPath();if(radius){ctx.roundRect(panel.x0,panel.y0,panel.w,panel.h,Math.min(radius,Math.min(panel.w,panel.h)/2))}else ctx.rect(panel.x0,panel.y0,panel.w,panel.h);ctx.clip();ctx.drawImage(panel.image,panel.x0+(panel.w-dw)/2+panel.x,panel.y0+(panel.h-dh)/2+panel.y,dw,dh);ctx.restore()});if(isSofaTemplate1&&b.key==="portrait5"){const g=ctx.createLinearGradient(0,760,0,1233);g.addColorStop(0,"rgba(0,0,0,0)");g.addColorStop(1,"rgba(0,0,0,.45)");ctx.fillStyle=g;ctx.fillRect(0,760,1440,473)}if(isSofaTemplate1&&(b.key==="portrait3"||b.key==="portrait5")){ctx.fillStyle="#FFFFFF";ctx.fillRect(0,1233,1440,25);const splitX=b.key==="portrait3"?707.5:710,splitW=b.key==="portrait3"?25:20;ctx.fillRect(splitX,1258,splitW,662)}}
 function drawRegionOutline(b){const o=b.regionOutline,p=activePhotoPanel(b),show=b===selected&&b.photoPanels&&p&&!active;if(!show){o.classList.remove("visible");return}o.style.left=p.x0/b.w*100+"%";o.style.top=p.y0/b.h*100+"%";o.style.width=p.w/b.w*100+"%";o.style.height=p.h/b.h*100+"%";o.classList.add("visible")}
 const oldRender=render;
 render=function(b){oldRender(b);const ctx=b.canvas.getContext("2d");drawPhotoPanels(ctx,b);b.extra.filter(it=>!it.logoOverlay).forEach(it=>drawExtra(ctx,it));if($("watermarkToggle").checked&&b.watermarkImage)ctx.drawImage(b.watermarkImage,0,0,b.w,b.h);if($("logoToggle").checked)b.extra.filter(it=>it.logoOverlay).forEach(it=>drawExtra(ctx,it));drawOutline(b);drawRegionOutline(b);drawPathEditor(b)};
@@ -781,14 +781,15 @@ main3Board.activePanel="top";
 function currentZoomTarget(b){return activePhotoPanel(b)||b}
 const main3RegionUI=document.createElement("section");main3RegionUI.className="main3-regions";main3RegionUI.innerHTML='<h3>主图3 · 分区图片</h3><p class="hint">三块图片分别上传；点击画板区域后，可用左侧滑块或鼠标滚轮缩放，并直接拖动调整位置。</p>'+(main3Board.photoPanels||[]).map(p=>'<button type="button" class="main3-region-button" data-region="'+p.key+'"><span>'+p.name+'</span><small>单独上传</small></button>').join('')+'<input id="main3RegionFile" type="file" accept="image/jpeg,image/png,image/webp" hidden>';
 scene.insertBefore(main3RegionUI,scene.querySelector(".tools"));
-function updateMain3RegionUI(){const show=selected?.key==="portrait3"&&!!main3Board.photoPanels;main3RegionUI.classList.toggle("visible",show);main3RegionUI.querySelectorAll("[data-region]").forEach(btn=>btn.classList.toggle("active",show&&btn.dataset.region===main3Board.activePanel));if(show){const p=activePhotoPanel(main3Board);zoom.min=100;zoom.max=300;zoom.value=Math.round((p?.zoom||1)*100);zoomText.textContent=zoom.value+"%"}boards.forEach(drawRegionOutline)}
-function loadPanelFile(file,panel,board=main3Board){if(!file||!panel)return;if(!/^image\/(jpeg|png|webp)$/.test(file.type)){$("status").textContent="仅支持 JPG、PNG、WEBP 图片";return}$("status").textContent="正在读取 "+panel.name+"："+file.name;const reader=new FileReader();reader.onload=event=>{const img=new Image();img.onload=()=>{pushHistory();panel.image=img;panel.x=0;panel.y=0;panel.zoom=1;board.activePanel=panel.key;if(panel.key==="top"){const peer=pairedBoard(board);if(peer)applyUploadedBackground(peer,img)}deselect();selectBoard(board);render(board);updateMain3RegionUI();if(typeof updateMain5RegionUI==="function")updateMain5RegionUI();$("status").textContent="已更新"+board.name+"的"+panel.name+"："+file.name+(panel.key==="top"?"；已同步方图背景":"")};img.onerror=()=>$("status").textContent="图片无法显示，请重新选择";img.src=event.target.result};reader.onerror=()=>$("status").textContent="图片读取失败，请重试";reader.readAsDataURL(file)}
-main3RegionUI.addEventListener("click",e=>{const btn=e.target.closest("[data-region]");if(!btn)return;main3Board.activePanel=btn.dataset.region;deselect();selectBoard(main3Board);updateMain3RegionUI();$("main3RegionFile").click()});
-$("main3RegionFile").addEventListener("change",e=>{const file=e.target.files[0],panel=activePhotoPanel(main3Board);e.target.value="";loadPanelFile(file,panel)});
+function currentMain3Board(){return selected?.key==="square3"?boardByKey.square3:main3Board}
+function updateMain3RegionUI(){const board=currentMain3Board(),show=["portrait3","square3"].includes(selected?.key)&&!!board.photoPanels;main3RegionUI.classList.toggle("visible",show);main3RegionUI.querySelectorAll("[data-region]").forEach(btn=>btn.classList.toggle("active",show&&btn.dataset.region===board.activePanel));if(show){const p=activePhotoPanel(board);zoom.min=100;zoom.max=300;zoom.value=Math.round((p?.zoom||1)*100);zoomText.textContent=zoom.value+"%"}boards.forEach(drawRegionOutline)}
+function loadPanelFile(file,panel,board=main3Board){if(!file||!panel)return;if(!/^image\/(jpeg|png|webp)$/.test(file.type)){$("status").textContent="仅支持 JPG、PNG、WEBP 图片";return}$("status").textContent="正在读取 "+panel.name+"："+file.name;const reader=new FileReader();reader.onload=event=>{const img=new Image();img.onload=()=>{pushHistory();panel.image=img;panel.x=0;panel.y=0;panel.zoom=1;board.activePanel=panel.key;if(panel.key==="top"&&isSofaTemplate1){const peer=pairedBoard(board);if(peer)applyUploadedBackground(peer,img)}deselect();selectBoard(board);render(board);updateMain3RegionUI();if(typeof updateMain5RegionUI==="function")updateMain5RegionUI();$("status").textContent="已更新"+board.name+"的"+panel.name+"："+file.name+(panel.key==="top"&&isSofaTemplate1?"；已同步方图背景":"")};img.onerror=()=>$("status").textContent="图片无法显示，请重新选择";img.src=event.target.result};reader.onerror=()=>$("status").textContent="图片读取失败，请重试";reader.readAsDataURL(file)}
+main3RegionUI.addEventListener("click",e=>{const btn=e.target.closest("[data-region]");if(!btn)return;const board=currentMain3Board();board.activePanel=btn.dataset.region;deselect();selectBoard(board);updateMain3RegionUI();$("main3RegionFile").click()});
+$("main3RegionFile").addEventListener("change",e=>{const board=currentMain3Board(),file=e.target.files[0],panel=activePhotoPanel(board);e.target.value="";loadPanelFile(file,panel,board)});
 const selectBoardBeforeMain3=selectBoard;
 selectBoard=function(b){selectBoardBeforeMain3(b);const target=currentZoomTarget(b);zoom.min=b.photoPanels?100:(b.kind==="portrait"?100:50);zoom.max=300;zoom.value=Math.round(target.zoom*100);zoomText.textContent=zoom.value+"%";updateMain3RegionUI()};
 const loadFileBeforeMain3=loadFile;
-loadFile=function(file){if(selected?.key==="portrait3"&&main3Board.photoPanels)return loadPanelFile(file,activePhotoPanel(main3Board));return loadFileBeforeMain3(file)};
+loadFile=function(file){if(["portrait3","square3"].includes(selected?.key)&&selected.photoPanels)return loadPanelFile(file,activePhotoPanel(selected),selected);return loadFileBeforeMain3(file)};
 const startImageDragBeforeMain3=startImageDrag,moveImageDragBeforeMain3=moveImageDrag,wheelImageBeforeMain3=wheelImage;
 startImageDrag=function(b,e){if(!b.photoPanels)return startImageDragBeforeMain3(b,e);if(!focusMode||spaceDown||e.button!==0||editing||active)return;const panel=panelAt(b,boardPoint(b,e));if(!panel)return;b.activePanel=panel.key;deselect();selectBoard(b);updateMain3RegionUI();if(!panel.image)return;imageDrag={b,panel,id:e.pointerId,sx:e.clientX,sy:e.clientY,x:panel.x,y:panel.y,recorded:false};b.canvas.setPointerCapture(e.pointerId);b.wrap.classList.add("dragging")};
 moveImageDrag=function(b,e){if(!imageDrag?.panel)return moveImageDragBeforeMain3(b,e);if(imageDrag.b!==b||imageDrag.id!==e.pointerId)return;const panel=imageDrag.panel,r=b.canvas.getBoundingClientRect(),nextX=imageDrag.x+(e.clientX-imageDrag.sx)*b.w/r.width,nextY=imageDrag.y+(e.clientY-imageDrag.sy)*b.h/r.height;if(!imageDrag.recorded&&(Math.abs(nextX-panel.x)>1||Math.abs(nextY-panel.y)>1)){pushHistory();imageDrag.recorded=true}panel.x=nextX;panel.y=nextY;clampPhotoPanel(panel);render(b)};
@@ -823,6 +824,7 @@ const sofaTemplate2Ready=templateId==="2"?(async()=>{
       const item=makePsdText(b,images[index],{...layer,anchorRight:layer.x+layer.w,style:{font:style.font||"Main4Sub",size:Number(style.size)||80,weight:style.weight||"400",color:style.color||"#FFFFFF",align:style.align||"right",lineHeight:Number(style.lineHeight)||Math.round((Number(style.size)||80)*1.2),letterSpacing:Number(style.letterSpacing)||0,opacity:style.opacity===undefined?1:Number(style.opacity)},rasterText:layer.rasterText||layer.text});
       item.locked=!!layer.locked;
       item.layerLabel=layer.layerLabel||layer.text;
+      item.syncKey=`t2-${number}-${index}`;
       item.psdStyle={...item.style};
     });
     if(spec.images){
@@ -834,9 +836,48 @@ const sofaTemplate2Ready=templateId==="2"?(async()=>{
     }
     b.extra=b.extra.filter(it=>it.text!=="顶顶顶");
     if(spec.outline){const o=spec.outline,label=b.extra.find(it=>it.kind==="text"&&it.text==="金标婴幼级半青皮");const componentId=label?.id,frame={id:nextId++,kind:"templateOutline",x:o.x,y:o.y,w:o.w,h:o.h,text:"",rotation:0,locked:false,anchorId:componentId,componentId,padding:o.padding,style:{color:"#FFFFFF",stroke:o.stroke,radius:o.radius,opacity:1}};if(label)label.componentId=componentId;b.extra.push(frame);syncTemplate2Outline(b)}
-    if(spec.gold){const gold=spec.gold,style={font:"Main4Sub",size:51,weight:"400",color:"#FFFFFF",align:"right",lineHeight:76,letterSpacing:0,opacity:1,...(gold.style||{})};b.extra.push({id:nextId++,kind:"goldBadge",x:gold.x,y:gold.y,w:gold.w,h:gold.h,anchorRight:gold.x+gold.w,text:gold.text,psdText:gold.text,psdRaster:gold.raster?await loadMain3Raster(window.SOFA_TEMPLATE2_ASSETS?.[gold.raster]||root+gold.raster):null,psdStyle:{...style},rotation:0,locked:false,style,layerLabel:gold.layerLabel||"金标组件"})}
+    if(spec.gold){const gold=spec.gold,style={font:"Main4Sub",size:51,weight:"400",color:"#FFFFFF",align:"right",lineHeight:76,letterSpacing:0,opacity:1,...(gold.style||{})},item={id:nextId++,kind:"goldBadge",x:gold.x,y:gold.y,w:gold.w,h:gold.h,anchorRight:gold.x+gold.w,text:gold.text,psdText:gold.text,psdRaster:gold.raster?await loadMain3Raster(window.SOFA_TEMPLATE2_ASSETS?.[gold.raster]||root+gold.raster):null,psdStyle:{...style},rotation:0,locked:false,style,layerLabel:gold.layerLabel||"金标组件",syncKey:`t2-${number}-gold`};b.extra.push(item)}
      render(b)
   }))
+  const squareData=window.SOFA_TEMPLATE2_SQUARE_DATA;
+  if(!squareData)throw new Error("沙发模板2方图图层数据缺失");
+  await Promise.all([1,2,3,4].map(async number=>{
+    const source=data[number],layout=squareData[number],b=boardByKey[number===1?"square":"square"+number];
+    await loadDefaultImage(b,root+layout.background);
+    const textImages=await Promise.all(source.texts.map(layer=>layer.raster?loadMain3Raster(window.SOFA_TEMPLATE2_ASSETS?.[layer.raster]||root+layer.raster):Promise.resolve(null)));
+    layout.texts.forEach((position,index)=>{
+      const layer=source.texts[index],style=layer.style||{};
+      const item=makePsdText(b,textImages[index],{...layer,...position,rasterBounds:null,anchorRight:position.x+position.w,style:{font:style.font||"Main4Sub",size:Number(style.size)||80,weight:style.weight||"400",color:style.color||"#FFFFFF",align:style.align||"right",lineHeight:Number(style.lineHeight)||Math.round((Number(style.size)||80)*1.2),letterSpacing:Number(style.letterSpacing)||0,opacity:style.opacity===undefined?1:Number(style.opacity)},rasterText:layer.rasterText||layer.text});
+      item.locked=!!layer.locked;
+      item.layerLabel=layer.layerLabel||layer.text;
+      item.syncKey=`t2-${number}-${index}`;
+      item.psdStyle={...item.style};
+    });
+    if(layout.images&&source.images){
+      const decorations=await Promise.all(layout.images.map(async (position,index)=>{const layer=source.images[index];return{...layer,...position,image:await loadMain3Raster(window.SOFA_TEMPLATE2_ASSETS?.[layer.src]||root+layer.src)}}));
+      decorations.forEach(layer=>b.extra.push({id:nextId++,kind:"image",x:layer.x,y:layer.y,w:layer.w,h:layer.h,image:layer.image,rotation:Number(layer.rotation)||0,locked:false,style:{opacity:layer.opacity===undefined?1:Number(layer.opacity)},layerLabel:layer.layerLabel||layer.src}));
+    }
+    if(layout.shapes&&source.shapes){
+      layout.shapes.forEach((position,index)=>{const layer=source.shapes[index];b.extra.push({id:nextId++,kind:layer.kind||"rect",x:position.x,y:position.y,w:position.w,h:position.h,rotation:Number(layer.rotation)||0,locked:false,style:{color:"#FFFFFF",opacity:1,...(layer.style||{})},layerLabel:layer.layerLabel||"形状图层"})});
+    }
+    if(layout.outline){
+      const o=layout.outline,label=b.extra.find(it=>it.kind==="text"&&it.text==="金标婴幼级半青皮"),componentId=label?.id;
+      const frame={id:nextId++,kind:"templateOutline",x:o.x,y:o.y,w:o.w,h:o.h,text:"",rotation:0,locked:false,anchorId:componentId,componentId,padding:o.padding,style:{color:"#FFFFFF",stroke:o.stroke,radius:o.radius,opacity:1},layerLabel:"白色圆角线框"};
+      if(label)label.componentId=componentId;
+      b.extra.push(frame);
+      syncTemplate2Outline(b);
+    }
+    if(layout.gold&&source.gold){
+      const position=layout.gold,gold=source.gold,style={font:"Main4Sub",size:51,weight:"400",color:"#FFFFFF",align:"right",lineHeight:76,letterSpacing:0,opacity:1,...(gold.style||{})};
+      b.extra.push({id:nextId++,kind:"goldBadge",x:position.x,y:position.y,w:position.w,h:position.h,anchorRight:position.x+position.w,text:gold.text,psdText:gold.text,psdRaster:gold.raster?await loadMain3Raster(window.SOFA_TEMPLATE2_ASSETS?.[gold.raster]||root+gold.raster):null,psdStyle:{...style},rotation:0,locked:false,style,layerLabel:gold.layerLabel||"金标组件",syncKey:`t2-${number}-gold`});
+    }
+    if(layout.photoPanels){
+      const panelImages=await Promise.all(layout.photoPanels.map(panel=>loadMain3Raster(root+panel.src)));
+      b.photoPanels=layout.photoPanels.map((panel,index)=>({...panel,image:panelImages[index],x:0,y:0,zoom:1,maxZoom:3}));
+      b.activePanel="top";
+    }
+    render(b);
+  }));
   await Promise.all([
     loadDefaultImage(boardByKey.square5,root+"main5-square.jpg"),
     loadDefaultImage(boardByKey.portrait5,root+"main5-portrait.jpg")
@@ -845,8 +886,9 @@ const sofaTemplate2Ready=templateId==="2"?(async()=>{
   render(boardByKey.portrait5);
    if(templateId==="2"){
      const b=boardByKey.portrait3;
-     const psdPathNodes=(raw,bounds)=>raw.map(p=>{const point=v=>[(v[1]*b.w-bounds[0])/bounds[2],(v[0]*b.h-bounds[1])/bounds[3]];return{a:point(p[0]),in:point(p[1]),out:point(p[2])}});
-     const addPsdPath=(id,raw,style={},options={})=>{const bounds=options.bounds||[0,0,b.w,b.h],item={id:nextId++,kind:"path",pathLabel:options.label||id,closed:!!options.closed,x:bounds[0],y:bounds[1],w:bounds[2],h:bounds[3],rotation:0,locked:false,nodes:psdPathNodes(raw,bounds),sourceNodes:psdPathNodes(raw,bounds),pathEdited:true,groupId:options.groupId||null,fadeEnd:!!options.fadeEnd,style:{color:"#FFFFFF",opacity:1,stroke:3,dash:[8,8],...style},psdStyle:{color:"#FFFFFF",opacity:1,stroke:3,dash:[8,8]}};b.extra.push(item);return item};
+     const psdPathNodes=(target,raw,bounds)=>raw.map(p=>{const point=v=>[(v[1]*target.w-bounds[0])/bounds[2],(v[0]*target.h-bounds[1])/bounds[3]];return{a:point(p[0]),in:point(p[1]),out:point(p[2])}});
+     const makePsdPath=(target,id,raw,style={},options={})=>{const bounds=options.bounds||[0,0,target.w,target.h],item={id:nextId++,kind:"path",pathLabel:options.label||id,closed:!!options.closed,x:bounds[0],y:bounds[1],w:bounds[2],h:bounds[3],rotation:0,locked:false,nodes:psdPathNodes(target,raw,bounds),sourceNodes:psdPathNodes(target,raw,bounds),pathEdited:true,groupId:options.groupId||null,fadeEnd:!!options.fadeEnd,style:{color:"#FFFFFF",opacity:1,stroke:3,dash:[8,8],...style},psdStyle:{color:"#FFFFFF",opacity:1,stroke:3,dash:[8,8]}};target.extra.push(item);return item};
+     const addPsdPath=(id,raw,style={},options={})=>makePsdPath(b,id,raw,style,options);
      addPsdPath("main3-body",[
        [[.510245,.689583],[.552605,.721834],[.467886,.657332]],
        [[.393773,.353315],[.396491,.494394],[.337824,.368608]],
@@ -865,6 +907,26 @@ const sofaTemplate2Ready=templateId==="2"?(async()=>{
      ],{stroke:5,dash:[0,8],opacity:.8,fill:"#FFFFFF",fillOpacity:.2},{bounds:[1023,1599,181,208],closed:true,label:"主图3右下虚线"});
      [{x:407,y:333,w:23,h:23,label:"主图3上方锚点"},{x:498,y:626,w:23,h:23,label:"主图3中部锚点"}].forEach(dot=>b.extra.push({id:nextId++,kind:"circle",x:dot.x,y:dot.y,w:dot.w,h:dot.h,rotation:0,locked:false,pathLabel:dot.label,style:{color:"#FFFFFF",opacity:1,stroke:0}}));
      render(b);
+     const square=boardByKey.square3;
+     const addSquarePath=(id,raw,style={},options={})=>makePsdPath(square,id,raw,style,options);
+     addSquarePath("main3-square-body",[
+       [[.5837993622,.6895833015],[.6402788758,.7218341231],[.5273199081,.65733248]],
+       [[.4285032749,.3533145785],[.4321265817,.4943938851],[.3539046645,.3686082959]],
+       [[.2305554748,.2794673443],[.2691971660,.3363814354],[.1850209236,.2992334366]],
+       [[.0465276837,.2222222090],[.0911716819,.3007296910],[.00371950865,.1469429135]]
+     ],{stroke:3,dash:[4,2],dashScale:3},{bounds:[318,63,679,779],label:"主图3上方虚线",fadeEnd:true});
+     addSquarePath("main3-square-left",[
+       [[.7521917820,.4284721613],[.7290572524,.4709153771],[.7753263116,.3860289454]],
+       [[.9194444418,.3256944418],[.8341056108,.3138545752],[.9013625383,.2623599172]],
+       [[.9292750955,.1180555224],[.9158294201,.1965158582],[.9427208304,.0395951867]]
+     ],{stroke:5,dash:[0,8]},{bounds:[171,1077,449,262],label:"主图3左下虚线",fadeEnd:true});
+     addSquarePath("main3-square-right",[
+       [[.8264682293,.8201273084],[.8264682293,.8201273084],[.8264682293,.8201273084]],
+       [[.9322904944,.7922486663],[.9322904944,.7922486663],[.9322904944,.7922486663]],
+       [[.9462421536,.7161633372],[.9462421536,.7161633372],[.9462421536,.7161633372]]
+     ],{stroke:5,dash:[0,8],opacity:.8,fill:"#FFFFFF",fillOpacity:.2},{bounds:[1028,1186,157,180],closed:true,label:"主图3右下虚线"});
+     [{x:407,y:194,w:23,h:23,label:"主图3上方锚点"},{x:498,y:487,w:23,h:23,label:"主图3中部锚点"}].forEach(dot=>square.extra.push({id:nextId++,kind:"circle",x:dot.x,y:dot.y,w:dot.w,h:dot.h,rotation:0,locked:false,pathLabel:dot.label,style:{color:"#FFFFFF",opacity:1,stroke:0}}));
+     render(square);
    }
 })().catch(error=>{document.body.dataset.template2Error=error.message;console.error(error);throw error}):Promise.resolve();
 const main5TemplateReady=isSofaTemplate1?(async()=>{
