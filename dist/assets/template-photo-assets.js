@@ -1,1 +1,0 @@
-window.TEMPLATE_PHOTO_ASSETS ||= {};
