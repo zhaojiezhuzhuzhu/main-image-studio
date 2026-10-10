@@ -10,7 +10,7 @@ const templates = [
     id: '1',
     name: '沙发模板1',
     description: '已配置 10 张画板',
-    images: ['main1-portrait.jpg', 'catalog-portrait-2.jpg', 'catalog-portrait-3.jpg', 'catalog-portrait-4.jpg', 'catalog-portrait-5.jpg']
+    images: ['main1-thumbnail.jpg', 'catalog-portrait-2.jpg', 'catalog-portrait-3.jpg', 'catalog-portrait-4.jpg', 'catalog-portrait-5.jpg']
   },
   {
     id: '2',
@@ -86,10 +86,6 @@ syncRoute()
           <div class="previews">
             <div v-for="(image, index) in template.images" :key="`${template.id}-${index}`" class="preview" :class="{ empty: !image }">
               <img v-if="image" :src="`/assets/${image}`" :alt="`${template.name} 主图${index + 1}竖版预览`" />
-              <div v-if="template.id === '1' && index === 0" class="preview-copy" aria-hidden="true">
-                <span>高奢半青皮</span>
-                <span>解放双手 语音智控</span>
-              </div>
               <span class="number">主图{{ index + 1 }}</span>
             </div>
           </div>
