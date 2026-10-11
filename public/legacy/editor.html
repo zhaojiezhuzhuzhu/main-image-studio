@@ -53,6 +53,8 @@ main>.topbar{grid-row:1}main>.workspace-viewport{grid-row:2}
 .toolbar button:hover:not(:disabled){background:#3a4860}.toolbar button:disabled{opacity:.35}
 .toolbar .divider{height:20px;border-left:1px solid #536075;margin:0 4px}
 .toolbar .percentage{min-width:44px;text-align:center;font-size:12px;font-weight:700}.topbar-actions{display:flex;align-items:center}.toolbar .view-slider{width:150px;margin:0 5px;accent-color:#79a2ff;cursor:pointer}
+.template-save-actions{display:flex;align-items:center;gap:8px;margin-right:10px}.template-save-actions button{width:auto;margin:0;padding:8px 13px;border:1px solid #c9d7d8;border-radius:6px;background:#fff;color:#29444a;font-size:12px;font-weight:700;white-space:nowrap}.template-save-actions button:hover:not(:disabled){border-color:#58a99b;background:#f0faf8;color:#176f6d}.template-save-actions .primary-save{border-color:#176f6d;background:#176f6d;color:#fff}.template-save-actions .primary-save:hover:not(:disabled){border-color:#105a5a;background:#105a5a;color:#fff}.template-save-actions button:disabled{opacity:.55;cursor:wait}
+.template-name-dialog{width:min(420px,calc(100vw - 32px));padding:0;border:0;border-radius:12px;background:#fff;color:#20323a;box-shadow:0 24px 70px rgba(15,31,36,.3)}.template-name-dialog::backdrop{background:rgba(12,25,30,.54);backdrop-filter:blur(2px)}.template-name-dialog form{padding:24px}.template-name-dialog h2{margin:0 0 8px;font-size:19px}.template-name-dialog p{margin:0 0 17px;color:#667b82;font-size:13px;line-height:1.6}.template-name-dialog label{display:block;margin:0 0 7px;color:#29444a;font-size:12px;font-weight:700}.template-name-dialog input{width:100%;height:42px;padding:0 12px;border:1px solid #bdced0;border-radius:7px;outline:none;font:inherit}.template-name-dialog input:focus{border-color:#2b9485;box-shadow:0 0 0 3px rgba(43,148,133,.13)}.template-name-error{min-height:18px;margin:6px 0 0!important;color:#b3312d!important;font-size:12px!important}.template-dialog-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:15px}.template-dialog-actions button{width:auto;margin:0;padding:9px 16px;border-radius:6px}.template-dialog-actions .dialog-cancel{border:1px solid #cfdbdc;background:#fff;color:#496067}.template-dialog-actions .dialog-confirm{background:#176f6d;color:#fff}
 .workspace-viewport{position:relative;min-width:0;min-height:0;overflow:hidden;background-color:#f7f9fc;background-image:radial-gradient(circle,rgba(94,108,128,.24) 1px,transparent 1.2px);background-size:16px 16px;background-position:8px 8px;cursor:grab;touch-action:none}
 .viewport-controls{position:absolute;right:max(20px,calc(1100px - 100vw));bottom:20px;z-index:30;display:flex;flex-direction:column;align-items:flex-end;gap:8px;pointer-events:none}.viewport-controls>*{pointer-events:auto}.view-toolbar{min-height:48px;padding:7px 9px;border:1px solid rgba(117,144,160,.5);border-radius:14px;background:rgba(17,26,35,.94);box-shadow:0 12px 30px rgba(18,31,45,.22);backdrop-filter:blur(12px)}.view-toolbar .view-slider{width:150px}.view-toolbar button{border-radius:8px;padding:8px 12px;background:var(--ui-accent,#3AEFD0);color:#102026}
 .workspace-viewport.space-panning,.workspace-viewport.hand-panning{cursor:grabbing;user-select:none}
@@ -260,6 +262,11 @@ button{background:var(--ui-accent);color:#102026}
 <main>
   <div class="topbar"><div class="editor-location"><a class="editor-home" href="/">‹ 模板列表</a><span id="templateTitle">主图模板·沙发模板1</span></div>
     <div class="topbar-actions">
+      <div id="templateSaveActions" class="template-save-actions" aria-label="模板保存">
+        <button id="saveAsMyTemplate" class="primary-save" type="button">保存到我的模板</button>
+        <button id="updateMyTemplate" class="primary-save" type="button" hidden>保存修改</button>
+        <button id="saveAsNewTemplate" type="button" hidden>另存为新模板</button>
+      </div>
       <div class="toolbar history-toolbar" aria-label="编辑操作">
         <button id="undo" type="button" title="撤销编辑" disabled>↶ 撤销</button>
         <button id="redo" type="button" title="恢复当前模板全部 10 个画板的初始状态，会清除本次编辑">↷ 恢复初始</button>
@@ -281,6 +288,19 @@ button{background:var(--ui-accent);color:#102026}
   </div>
 </main>
 </div>
+<dialog id="templateNameDialog" class="template-name-dialog" aria-labelledby="templateNameDialogTitle">
+  <form method="dialog">
+    <h2 id="templateNameDialogTitle">保存模板</h2>
+    <p>模板会作为独立副本保存在此浏览器中，不会修改系统原始模板。</p>
+    <label for="templateNameInput">模板名称</label>
+    <input id="templateNameInput" type="text" maxlength="80" autocomplete="off">
+    <p id="templateNameError" class="template-name-error" aria-live="polite"></p>
+    <div class="template-dialog-actions">
+      <button id="templateNameCancel" class="dialog-cancel" type="button">取消</button>
+      <button id="templateNameConfirm" class="dialog-confirm" type="button">保存</button>
+    </div>
+  </form>
+</dialog>
 <section id="layerDrawer" class="layer-drawer" aria-label="图层信息" aria-hidden="true">
   <div class="layer-drawer-head"><h2>图层信息</h2><button id="layerDrawerClose" class="layer-drawer-close" type="button" aria-label="关闭图层信息">×</button></div>
   <p id="layerDrawerMeta" class="layer-drawer-meta"></p>
@@ -292,11 +312,15 @@ button{background:var(--ui-accent);color:#102026}
 <script src="/assets/template-photo-assets-2.js"></script>
 <script src="/assets/sofa-template2/template2-data.js"></script>
 <script src="/assets/sofa-template2/template2-assets.js"></script>
+<script src="/template-store.js"></script>
 <script>
 (()=>{
 "use strict";
 const $=id=>document.getElementById(id);
-const templateId=new URLSearchParams(location.search).get("template")||"1";
+const searchParams=new URLSearchParams(location.search);
+const templateId=searchParams.get("template")||"1";
+const myTemplateId=searchParams.get("myTemplate")||"";
+let currentMyTemplate=null;
 const templateNames={"1":"沙发模板1","2":"沙发模板2","3":"沙发模板3",custom:"自定义模板"};
 const templateName=templateNames[templateId]||templateNames["1"];
 const isSofaTemplate1=templateId==="1"||!templateNames[templateId];
@@ -306,9 +330,10 @@ const editorHome=document.querySelector(".editor-home");
 editorHome?.addEventListener("click",event=>{
   if(window.parent===window)return;
   event.preventDefault();
-  window.parent.location.hash="/";
+  window.parent.location.hash=myTemplateId?"/my-templates":"/";
 });
-$("templateTitle").textContent="主图模板·"+templateName;
+$("templateTitle").textContent=myTemplateId?"正在加载我的模板…":"主图模板·"+templateName;
+if(myTemplateId)editorHome.textContent="‹ 我的模板";
 document.title="主图生成器 · "+templateName;
 const boardDefinitions=[
   {key:"square",name:"主图1-方图",w:1440,h:1440,fit:"contain",kind:"square",group:"mother",text1:isSofaTemplate1?"高奢半青皮":"",text2:isSofaTemplate1?"解放双手 语音智控":""},
@@ -1485,6 +1510,127 @@ async function reviveTemplateValue(value){
   if(Array.isArray(value))return Promise.all(value.map(reviveTemplateValue));
   const entries=await Promise.all(Object.entries(value).map(async([key,item])=>[key,await reviveTemplateValue(item)]));return Object.fromEntries(entries)
 }
+function blobToDataUrl(blob){return new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve(reader.result);reader.onerror=()=>reject(reader.error||new Error("图片资源读取失败"));reader.readAsDataURL(blob)})}
+async function persistentImageSource(image){
+  const src=image?.currentSrc||image?.src||"";
+  if(!src)return"";
+  if(src.startsWith("data:"))return src;
+  if(src.startsWith("blob:")){const response=await fetch(src);if(!response.ok)throw new Error("临时图片资源已失效，请重新上传后再保存");return blobToDataUrl(await response.blob())}
+  try{
+    const url=new URL(src,location.href);
+    if(url.origin===location.origin)return url.pathname+url.search;
+    const response=await fetch(url.href,{mode:"cors"});
+    if(response.ok)return blobToDataUrl(await response.blob())
+  }catch(error){console.warn("远程图片转存失败，将保留原地址",error)}
+  return src
+}
+async function serializeStoredValue(value){
+  if(value==null||typeof value!=="object")return value;
+  if(value instanceof HTMLImageElement)return{__imageSrc:await persistentImageSource(value)};
+  if(value instanceof HTMLCanvasElement)return{__imageSrc:value.toDataURL("image/png")};
+  if(Array.isArray(value))return Promise.all(value.map(serializeStoredValue));
+  const result={};
+  for(const [key,item] of Object.entries(value))if(typeof item!=="function")result[key]=await serializeStoredValue(item);
+  return result
+}
+async function serializeBoardForStorage(b){
+  return serializeStoredValue({
+    sourceKey:b.key,name:b.name,w:b.w,h:b.h,kind:b.kind,fit:b.fit,group:b.group,
+    image:b.image,x:b.x,y:b.y,zoom:b.zoom,maxZoom:b.maxZoom,text1:b.text1,text2:b.text2,
+    textStyles:b.textStyles,textOffsets:b.textOffsets,extra:(b.extra||[]).filter(item=>!item.logoOverlay),
+    photoPanels:b.photoPanels||null,activePanel:b.activePanel||"top",collage:b.collage||null,
+    templateRole:b.templateRole,templatePack:b.templatePack,templatePresetPair:b.templatePresetPair
+  })
+}
+function makeTemplateThumbnail(){
+  try{
+    const source=boards.find(board=>board.key==="portrait1")?.canvas||boards[0].canvas;
+    const width=360,height=Math.max(1,Math.round(width*source.height/source.width)),canvas=document.createElement("canvas");
+    canvas.width=width;canvas.height=height;canvas.getContext("2d").drawImage(source,0,0,width,height);
+    return canvas.toDataURL("image/jpeg",.78)
+  }catch(error){console.warn("模板缩略图生成失败",error);return null}
+}
+async function buildStoredTemplateState(){
+  finishExportEdits();
+  await document.fonts.ready;
+  await defaultImagesReady;
+  renderAll();
+  return{schemaVersion:1,boards:await Promise.all(boards.map(serializeBoardForStorage))}
+}
+function applyStoredBoard(target,state){
+  const overlays=(target.extra||[]).filter(item=>item.logoOverlay);
+  target.fit=state.fit||target.fit;target.group=state.group??null;target.image=state.image||null;
+  target.x=Number(state.x)||0;target.y=Number(state.y)||0;target.zoom=Number(state.zoom)||1;target.maxZoom=Number(state.maxZoom)||3;
+  target.text1=state.text1||"";target.text2=state.text2||"";target.textStyles=state.textStyles||{title:{},sub:{}};
+  target.textOffsets=state.textOffsets||{title:{x:0,y:0},sub:{x:0,y:0}};target.extra=[...(state.extra||[]),...overlays];
+  target.photoPanels=state.photoPanels||null;target.activePanel=state.activePanel||"top";target.collage=state.collage||null;
+  for(const key of ["templateRole","templatePack","templatePresetPair"]){if(state[key]===undefined)delete target[key];else target[key]=state[key]}
+}
+function refreshPersistentIds(){
+  const extras=boards.flatMap(board=>board.extra||[]),numericIds=extras.map(item=>Number(item.id)).filter(Number.isFinite);
+  nextId=Math.max(nextId,(numericIds.length?Math.max(...numericIds):0)+1);
+  const groupIds=extras.map(item=>String(item.groupId||"")).map(value=>Number(/user-group-(\d+)/.exec(value)?.[1])).filter(Number.isFinite);
+  nextGroupId=Math.max(nextGroupId,(groupIds.length?Math.max(...groupIds):0)+1);
+  const linkedIds=extras.map(item=>String(item.linkedLayerId||"")).map(value=>Number(/linked-layer-(\d+)/.exec(value)?.[1])).filter(Number.isFinite);
+  nextLinkedLayerId=Math.max(nextLinkedLayerId,(linkedIds.length?Math.max(...linkedIds):0)+1)
+}
+async function applyStoredTemplate(record){
+  const rawBoards=record?.state?.boards;
+  if(!Array.isArray(rawBoards)||!rawBoards.length)throw new Error("模板数据不完整，无法打开");
+  const states=await Promise.all(rawBoards.map(reviveTemplateValue));
+  states.forEach(state=>{const target=boardByKey[state.sourceKey];if(target)applyStoredBoard(target,state)});
+  refreshPersistentIds();undoStack.length=0;redoStack.length=0;active=null;selectedRefs=[];layerHover=null;
+  renderAll();selectBoard(boards[0]);updateToolbar();updateMain3RegionUI?.();updateMain5RegionUI?.();updateCollageUI?.();updateUndoButtons();
+  currentMyTemplate=record;$("templateTitle").textContent="我的模板·"+record.name;document.title="主图生成器 · "+record.name;
+  $("status").textContent=`已加载“${record.name}”，共 ${boards.length} 张画板`
+}
+function setTemplateSaveMode(){
+  $("saveAsMyTemplate").hidden=!!myTemplateId;
+  $("updateMyTemplate").hidden=!myTemplateId;
+  $("saveAsNewTemplate").hidden=!myTemplateId
+}
+function setTemplateSavePending(pending){
+  [$("saveAsMyTemplate"),$("updateMyTemplate"),$("saveAsNewTemplate")].forEach(button=>button.disabled=pending)
+}
+function requestTemplateName(title,initialValue){
+  const dialog=$("templateNameDialog"),input=$("templateNameInput"),error=$("templateNameError"),confirm=$("templateNameConfirm"),cancel=$("templateNameCancel");
+  $("templateNameDialogTitle").textContent=title;input.value=initialValue||"";error.textContent="";
+  return new Promise(resolve=>{
+    let settled=false;
+    const finish=value=>{if(settled)return;settled=true;dialog.removeEventListener("cancel",onCancel);if(dialog.open)dialog.close();resolve(value)};
+    const onCancel=event=>{event.preventDefault();finish(null)};
+    confirm.onclick=()=>{const value=input.value.trim();if(!value){error.textContent="请输入模板名称";input.focus();return}finish(value)};
+    cancel.onclick=()=>finish(null);input.onkeydown=event=>{if(event.key==="Enter"){event.preventDefault();confirm.click()}};
+    dialog.addEventListener("cancel",onCancel);dialog.showModal();requestAnimationFrame(()=>{input.focus();input.select()})
+  })
+}
+async function createMyTemplate(name){
+  const state=await buildStoredTemplateState();
+  return window.MyTemplateStore.saveAsMyTemplate({name,baseTemplateId:templateId,boardCount:boards.length,thumbnail:makeTemplateThumbnail(),state})
+}
+async function onSaveAsMyTemplate(){
+  const name=await requestTemplateName("保存到我的模板",`${templateName} - 我的模板`);if(name===null)return;
+  setTemplateSavePending(true);$("status").textContent="正在保存完整模板数据…";
+  try{const record=await createMyTemplate(name);$("status").textContent=`保存成功：“${record.name}”已添加到我的模板`;window.parent?.postMessage({type:"my-template-saved",templateId:record.templateId},location.origin)}
+  catch(error){console.error(error);$("status").textContent="保存失败："+(error?.message||"请重试");alert($("status").textContent)}finally{setTemplateSavePending(false)}
+}
+async function onUpdateMyTemplate(){
+  if(!currentMyTemplate){$("status").textContent="模板尚未加载完成，请稍后再试";return}
+  setTemplateSavePending(true);$("status").textContent="正在保存修改…";
+  try{const state=await buildStoredTemplateState();currentMyTemplate=await window.MyTemplateStore.updateMyTemplate(currentMyTemplate.templateId,{boardCount:boards.length,thumbnail:makeTemplateThumbnail(),state});$("status").textContent=`保存成功：“${currentMyTemplate.name}”已更新`;window.parent?.postMessage({type:"my-template-updated",templateId:currentMyTemplate.templateId},location.origin)}
+  catch(error){console.error(error);$("status").textContent="保存失败："+(error?.message||"请重试");alert($("status").textContent)}finally{setTemplateSavePending(false)}
+}
+async function onSaveAsNewTemplate(){
+  if(!currentMyTemplate){$("status").textContent="模板尚未加载完成，请稍后再试";return}
+  const name=await requestTemplateName("另存为新模板",`${currentMyTemplate.name} - 副本`);if(name===null)return;
+  setTemplateSavePending(true);$("status").textContent="正在另存完整模板数据…";
+  try{const record=await createMyTemplate(name);$("status").textContent=`另存成功：“${record.name}”已添加到我的模板`;window.parent?.postMessage({type:"my-template-saved",templateId:record.templateId},location.origin)}
+  catch(error){console.error(error);$("status").textContent="另存失败："+(error?.message||"请重试");alert($("status").textContent)}finally{setTemplateSavePending(false)}
+}
+setTemplateSaveMode();
+$("saveAsMyTemplate").addEventListener("click",onSaveAsMyTemplate);
+$("updateMyTemplate").addEventListener("click",onUpdateMyTemplate);
+$("saveAsNewTemplate").addEventListener("click",onSaveAsNewTemplate);
 function rebaseImportedExtras(states){
   const linkedIds=new Map();
   states.forEach(state=>{
@@ -1513,6 +1659,15 @@ async function applyTemplatePresetToCurrentPair(pack,pair,button){
   }catch(error){$("status").textContent=error?.message||"模板套用失败，请重试"}finally{button.disabled=false}
 }
 defaultImagesReady.then(()=>requestAnimationFrame(fitWorkspace),()=>requestAnimationFrame(fitWorkspace));
+if(myTemplateId){
+  setTemplateSavePending(true);
+  defaultImagesReady.then(async()=>{
+    const record=await window.MyTemplateStore.loadMyTemplate(myTemplateId);
+    if(!record)throw new Error("未找到该模板，它可能已被删除");
+    await applyStoredTemplate(record);
+    requestAnimationFrame(fitWorkspace)
+  }).catch(error=>{console.error(error);$("templateTitle").textContent="我的模板加载失败";$("status").textContent="加载失败："+(error?.message||"请返回我的模板后重试");alert($("status").textContent)}).finally(()=>setTemplateSavePending(false))
+}
 window.addEventListener("resize",()=>requestAnimationFrame(fitWorkspace));
 
 /* Single-board focus mode: browsing stays read-only until one board is focused. */
