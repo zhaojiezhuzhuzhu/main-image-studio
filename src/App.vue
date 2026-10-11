@@ -1,6 +1,7 @@
 <script setup>
 import { computed, onMounted, onUnmounted, ref } from 'vue'
-import { ElButton } from 'element-plus'
+import { ElTooltip } from 'element-plus'
+import { EditPen, Grid, Picture } from '@element-plus/icons-vue'
 
 const editing = ref(false)
 const templateId = ref('1')
@@ -24,6 +25,16 @@ const templates = [
 
 const currentTemplate = computed(() => templates.find(item => item.id === templateId.value) || templates[0])
 const editorUrl = computed(() => `/legacy/editor.html?template=${encodeURIComponent(templateId.value)}`)
+
+function getTemplateDescription(template) {
+  const configuredIndexes = template.images
+    .map((image, index) => image ? index + 1 : null)
+    .filter(Boolean)
+
+  if (!configuredIndexes.length) return template.description
+
+  return `已配置${configuredIndexes.length * 2}个画板`
+}
 
 function goEditor(id) {
   templateId.value = id
@@ -65,29 +76,51 @@ syncRoute()
 
     <div v-else class="gallery-shell">
       <header class="site-header">
-        <div class="brand">主图生成器</div>
-        <span class="header-meta">模板大厅</span>
+        <div class="header-inner">
+          <div class="brand">
+            <span class="brand-mark" aria-hidden="true"><Grid /></span>
+            <span>主图生成器</span>
+          </div>
+        </div>
       </header>
 
       <main class="gallery-main">
         <div class="page-head">
           <h1>模板列表</h1>
-          <span class="count">4 个模板 · 每套 5 张竖版主图</span>
+          <span class="count">{{ templates.length }} 个模板<span class="count-separator" aria-hidden="true">/</span>每套 5 张竖版主图</span>
         </div>
 
         <section v-for="template in templates" :key="template.id" class="template-row" :aria-labelledby="`template-${template.id}`">
           <div class="template-info">
             <div>
               <h2 :id="`template-${template.id}`">{{ template.name }}</h2>
-              <p>{{ template.description }}</p>
+              <p>{{ getTemplateDescription(template) }}</p>
             </div>
-            <el-button class="edit-link" type="primary" size="small" @click="goEditor(template.id)">点击编辑 <span aria-hidden="true">→</span></el-button>
+            <el-tooltip content="编辑模板" placement="top" :show-after="300">
+              <button
+                class="edit-link"
+                type="button"
+                :aria-label="`编辑${template.name}`"
+                @click="goEditor(template.id)"
+              >
+                <EditPen class="edit-icon" aria-hidden="true" />
+              </button>
+            </el-tooltip>
           </div>
           <div class="previews">
-            <div v-for="(image, index) in template.images" :key="`${template.id}-${index}`" class="preview" :class="{ empty: !image }">
-              <img v-if="image" :src="`/assets/${image}`" :alt="`${template.name} 主图${index + 1}竖版预览`" />
-              <span class="number">主图{{ index + 1 }}</span>
-            </div>
+            <figure v-for="(image, index) in template.images" :key="`${template.id}-${index}`" class="preview">
+              <div class="preview-image" :class="{ empty: !image }">
+                <img v-if="image" :src="`/assets/${image}`" :alt="`${template.name} 主图${index + 1}竖版预览`" />
+                <div v-else class="empty-content">
+                  <Picture aria-hidden="true" />
+                  <span>{{ template.id === 'custom' ? '空白画板' : '待添加' }}</span>
+                </div>
+              </div>
+              <figcaption class="preview-caption">
+                <span>主图 {{ String(index + 1).padStart(2, '0') }}</span>
+                <span class="preview-format">竖版</span>
+              </figcaption>
+            </figure>
           </div>
         </section>
       </main>
