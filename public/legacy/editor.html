@@ -26,9 +26,11 @@ aside::-webkit-scrollbar{width:12px}aside::-webkit-scrollbar-track{background:va
 .brand{font-size:20px;font-weight:800;margin-bottom:22px}
 .brand:before{content:"◆";color:#315bea;margin-right:8px;font-size:12px}
 label{display:block;font-size:14px;font-weight:700;margin:16px 0 8px}
-.upload{height:112px;border:1px dashed #b7c4d8;border-radius:9px;display:grid;place-content:center;text-align:center;color:#52719b;cursor:pointer;transition:.15s}
+.upload{height:112px;border:1px dashed #b7c4d8;border-radius:9px;display:grid;place-content:center;text-align:center;color:#52719b;cursor:pointer;transition:.15s;position:relative;overflow:hidden}
 .upload:hover,.upload.dragover{border:2px solid #315bea;background:#eef4ff;color:#2454be}
 .upload b{font-size:28px;font-weight:400;line-height:1}.upload span{margin-top:6px}
+.upload input[type="file"]{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer;font-size:100px}
+.upload:focus-within{outline:2px solid #315bea;outline-offset:2px}
 .status,.hint{font-size:12px;color:#718096;line-height:1.65;margin:8px 0}
 .status:empty{display:none}
 .tools,.view-tools{margin-top:18px;padding-top:8px;border-top:1px solid #e8edf3}
@@ -242,8 +244,7 @@ button{background:var(--ui-accent);color:#102026}
 <aside>
   <div class="brand">主图生成器</div>
   <label>场景图</label>
-  <label id="dropZone" class="upload" for="file"><b>＋</b><span>上传场景图</span></label>
-  <input id="file" type="file" accept="image/jpeg,image/png,image/webp" hidden>
+  <div id="dropZone" class="upload"><b>＋</b><span>上传场景图</span><input id="file" type="file" accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp" aria-label="上传场景图"></div>
   <div id="status" class="status" aria-live="polite"></div>
   <p class="hint">直接双击画板上的文字可修改。按 Ctrl+Enter 完成，Esc 取消。</p>
   <div class="tools">
@@ -506,7 +507,8 @@ function fitWorkspace(){if(focusMode)return fitBoard(focusedBoard);const w=stage
 function fitBoard(b){if(!b)return;const r=b.section,vw=viewport.clientWidth,vh=viewport.clientHeight,bottom=focusMode?72:0,s=Math.max(.01,Math.min(2,Math.min((vw-48)/r.offsetWidth,(vh-bottom-32)/r.offsetHeight)));workspaceView.scale=s;workspaceView.x=(vw-r.offsetWidth*s)/2-r.offsetLeft*s;workspaceView.y=(vh-bottom-r.offsetHeight*s)/2-r.offsetTop*s;applyView()}
 function pairedBoard(b){if(b.key==="square")return boardByKey.portrait1;if(b.key==="portrait1")return boardByKey.square;const match=/^(square|portrait)([2-5])$/.exec(b.key);if(!match)return null;return boardByKey[(match[1]==="square"?"portrait":"square")+match[2]]||null}
 function applyUploadedBackground(b,img){if(b.photoPanels){const panel=b.photoPanels.find(p=>p.key==="top");panel.image=img;panel.x=0;panel.y=0;panel.zoom=1;b.activePanel="top"}else{b.image=img;b.x=0;b.y=0;b.zoom=1}render(b)}
-function loadFile(file){if(!file)return;if(!/^image\/(jpeg|png|webp)$/.test(file.type)){$("status").textContent="仅支持 JPG、PNG、WEBP 图片";return}const target=selected;$("status").textContent="正在读取："+file.name;const reader=new FileReader();reader.onload=e=>{const img=new Image();img.onload=()=>{pushHistory();const pair=pairedBoard(target),affected=pair?[target,pair]:[target];affected.forEach(b=>applyUploadedBackground(b,img));selectBoard(target);$("status").textContent="已上传："+file.name+"；"+(pair?"已同步到"+pair.name:"仅应用于"+target.name)};img.onerror=()=>$("status").textContent="图片无法显示，请重新选择";img.src=e.target.result};reader.onerror=()=>$("status").textContent="图片读取失败，请重试";reader.readAsDataURL(file)}
+function compatibleImageFile(file){const type=(file.type||"").toLowerCase(),ext=(file.name.split(".").pop()||"").toLowerCase(),typeByExt={jpg:"image/jpeg",jpeg:"image/jpeg",png:"image/png",webp:"image/webp"},normalizedType=type==="image/jpg"||type==="image/pjpeg"?"image/jpeg":type;if(/^image\/(jpeg|png|webp)$/.test(normalizedType))return normalizedType===type?file:new Blob([file],{type:normalizedType});return typeByExt[ext]?new Blob([file],{type:typeByExt[ext]}):null}
+function loadFile(file){if(!file)return;const readableFile=compatibleImageFile(file);if(!readableFile){$("status").textContent="仅支持 JPG、PNG、WEBP 图片";return}const target=selected;$("status").textContent="正在读取："+file.name;const reader=new FileReader();reader.onload=e=>{const img=new Image();img.onload=()=>{pushHistory();const pair=pairedBoard(target),affected=pair?[target,pair]:[target];affected.forEach(b=>applyUploadedBackground(b,img));selectBoard(target);$("status").textContent="已上传："+file.name+"；"+(pair?"已同步到"+pair.name:"仅应用于"+target.name)};img.onerror=()=>$("status").textContent="图片无法显示，请重新选择";img.src=e.target.result};reader.onerror=()=>$("status").textContent="图片读取失败，请重试";reader.readAsDataURL(readableFile)}
 function loadDefaultImage(b,path){return new Promise((resolve,reject)=>{const img=new Image();img.onload=()=>{if(!b.image){b.image=img;render(b)}resolve()};img.onerror=()=>{const error=new Error("默认背景加载失败："+path);console.error(error);reject(error)};const name=path.split("/").pop();img.src=window.SOFA_TEMPLATE2_ASSETS?.[name]||window.TEMPLATE_PHOTO_ASSETS?.[name]||path})}
 function canvasBlob(b){return new Promise((resolve,reject)=>{try{b.canvas.toBlob(blob=>blob?resolve(blob):reject(new Error("画板生成 JPG 失败")),"image/jpeg",.95)}catch(error){reject(error)}})}
 function saveBlob(blob,name){const u=URL.createObjectURL(blob),a=document.createElement("a");a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),4000)}
