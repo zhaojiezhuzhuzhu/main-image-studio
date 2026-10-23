@@ -1,0 +1,30 @@
+# Installed dependencies and generated output
+/public/models/cutout/*.onnx
+/public/models/cutout/*.download
+node_modules/
+dist/
+*.tsbuildinfo
+coverage/
+.site-release/
+dist-desktop/
+src-tauri/target/
+src-tauri/gen/
+tmp/desktop-tools/
+tmp/desktop-checks/
+releases/
+/tmp/
+/资料/
+
+# Local runtime state
+.vite*.log
+.vite.pid
+*.log
+
+# Local credentials
+.env
+.env.*
+!.env.example
+
+# Original reference materials remain on disk, outside the code baseline
+/规范文件/
+/设计草稿/

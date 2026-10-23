@@ -7,14 +7,34 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "test:template-store": "node scripts/template-store.test.mjs"
+    "test:image-edit-client": "node scripts/image-edit-client.test.mjs",
+    "test:image-edit-adapter": "node scripts/image-edit-adapter.test.mjs",
+    "test:component-presets": "node scripts/component-presets.test.mjs",
+    "test:editor-properties": "node scripts/editor-properties.test.mjs",
+    "test:single-mode-navigation": "node scripts/single-mode-navigation.test.mjs",
+    "test:selection-aspect-ratios": "node scripts/selection-aspect-ratios.test.mjs",
+    "test:mask-delete-shortcut": "node scripts/mask-delete-shortcut.test.mjs",
+    "test:inspiration-mode": "node scripts/inspiration-mode.test.mjs",
+    "test:header-alignment": "node scripts/header-alignment.test.mjs",
+    "test:template-store": "node scripts/template-store.test.mjs",
+    "test:reference-library": "node scripts/reference-library.test.mjs",
+    "test:reference-placement": "node scripts/reference-placement.test.mjs",
+    "test:reference-prompt-default": "node scripts/reference-prompt-default.test.mjs",
+    "test:workspace-project-actions": "node scripts/workspace-project-actions.test.mjs",
+    "test:sku-mode": "node scripts/sku-mode-integration.test.mjs"
   },
   "dependencies": {
     "@element-plus/icons-vue": "^2.3.2",
+    "@tauri-apps/api": "2.12.4",
     "element-plus": "^2.14.7",
+    "fabric": "7.4.0",
+    "onnxruntime-web": "1.30.0",
+    "react": "19.2.8",
+    "react-dom": "19.2.8",
     "vue": "^3.5.13"
   },
   "devDependencies": {
+    "@vitejs/plugin-react": "4.5.2",
     "@vitejs/plugin-vue": "^5.2.1",
     "vite": "^6.0.5"
   }

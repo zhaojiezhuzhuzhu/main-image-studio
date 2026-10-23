@@ -1,5 +1,9 @@
 node_modules/
 dist/
+.env
+.env.*
+!.env.example
+密钥.txt
 .playwright-cli/
 .tmp-layers/
 outputs/

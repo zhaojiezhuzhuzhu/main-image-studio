@@ -2,7 +2,11 @@
 import { computed, onMounted, onUnmounted, ref } from 'vue'
 import { ElMessage, ElMessageBox, ElTooltip } from 'element-plus'
 import { CopyDocument, Delete, EditPen, FolderOpened, Grid, Picture } from '@element-plus/icons-vue'
+import InspirationMode from './components/InspirationMode.vue'
+import SingleImageMode from './components/SingleImageMode.vue'
 
+const mode = ref('batch')
+const skuMounted = ref(false)
 const editing = ref(false)
 const activePage = ref('templates')
 const templateId = ref('1')
@@ -37,6 +41,20 @@ const editorUrl = computed(() => {
   if (myTemplateId.value) params.set('myTemplate', myTemplateId.value)
   return `/legacy/editor.html?${params}`
 })
+
+function setMode(nextMode) {
+  mode.value = ['batch', 'single', 'inspiration', 'sku'].includes(nextMode) ? nextMode : 'batch'
+  if (mode.value === 'sku') skuMounted.value = true
+  try {
+    window.localStorage.setItem('main-image-studio-mode', mode.value)
+  } catch {
+    // Private browsing may reject localStorage. The in-memory mode still works.
+  }
+  if (mode.value === 'single') document.title = '单图精准修图 · 主图生成器'
+  else if (mode.value === 'inspiration') document.title = '灵感模式 · 主图生成器'
+  else if (mode.value === 'sku') document.title = 'SKU生成 · 主图生成器'
+  else syncRoute()
+}
 
 function getTemplateDescription(template) {
   const configuredIndexes = template.images.map((image, index) => image ? index + 1 : null).filter(Boolean)
@@ -149,14 +167,16 @@ async function syncRoute() {
       templateId.value = params.get('template') || '1'
       myTemplateBaseId.value = templateId.value
     }
-    document.title = `${currentTemplateName.value} · 主图编辑器`
+    if (mode.value === 'batch') document.title = `${currentTemplateName.value} · 主图编辑器`
     return
   }
 
   editing.value = false
   myTemplateId.value = ''
   activePage.value = hash.startsWith('#/my-templates') ? 'my-templates' : 'templates'
-  document.title = activePage.value === 'my-templates' ? '我的模板 · 主图生成器' : '主图生成器 · 模板大厅'
+  if (mode.value === 'batch') {
+    document.title = activePage.value === 'my-templates' ? '我的模板 · 主图生成器' : '主图生成器 · 模板大厅'
+  }
   if (activePage.value === 'my-templates') await refreshMyTemplates()
 }
 
@@ -168,11 +188,21 @@ async function handleEditorMessage(event) {
 }
 
 onMounted(async () => {
+  try {
+    const savedMode = window.localStorage.getItem('main-image-studio-mode')
+    mode.value = ['batch', 'single', 'inspiration', 'sku'].includes(savedMode) ? savedMode : 'batch'
+    skuMounted.value = mode.value === 'sku'
+  } catch {
+    mode.value = 'batch'
+  }
   window.addEventListener('popstate', syncRoute)
   window.addEventListener('hashchange', syncRoute)
   window.addEventListener('message', handleEditorMessage)
   await refreshMyTemplates()
   await syncRoute()
+  if (mode.value === 'single') document.title = '单图精准修图 · 主图生成器'
+  if (mode.value === 'inspiration') document.title = '灵感模式 · 主图生成器'
+  if (mode.value === 'sku') document.title = 'SKU生成 · 主图生成器'
 })
 
 onUnmounted(() => {
@@ -184,27 +214,45 @@ onUnmounted(() => {
 
 <template>
   <div class="app-shell">
-    <main v-if="editing" class="editor-shell">
-      <iframe :key="editorUrl" class="editor-frame" :src="editorUrl" :title="`${currentTemplateName}编辑器`" allow="download" />
-    </main>
-
-    <div v-else class="gallery-shell">
-      <header class="site-header">
-        <div class="header-inner">
-          <div class="brand">
-            <span class="brand-mark" aria-hidden="true"><Grid /></span>
-            <span>主图生成器</span>
-          </div>
-          <nav class="header-nav" aria-label="模板导航">
-            <button :class="{ active: activePage === 'templates' }" type="button" @click="showPage('templates')">模板列表</button>
-            <button :class="{ active: activePage === 'my-templates' }" type="button" @click="showPage('my-templates')">
+    <header class="site-header">
+      <div class="header-inner">
+        <div class="brand">
+          <span class="brand-mark" aria-hidden="true"><Grid /></span>
+          <span>主图生成器</span>
+          <span class="brand-context">{{ mode === 'batch' ? '批量工作台' : mode === 'single' ? '单图精准修图' : mode === 'inspiration' ? '灵感成图' : 'SKU生成' }}</span>
+        </div>
+        <div class="header-actions">
+          <nav v-if="mode === 'batch'" class="header-nav" aria-label="批量模式导航">
+            <button :class="{ active: !editing && activePage === 'templates' }" type="button" @click="showPage('templates')">模板列表</button>
+            <button :class="{ active: !editing && activePage === 'my-templates' }" type="button" @click="showPage('my-templates')">
               我的模板<span v-if="myTemplates.length" class="nav-count">{{ myTemplates.length }}</span>
             </button>
           </nav>
+          <div class="global-mode-switch" role="group" aria-label="工作模式">
+            <button type="button" :class="{ active: mode === 'batch' }" :aria-pressed="mode === 'batch'" @click="setMode('batch')">
+              <span>1</span>批量模式
+            </button>
+            <button type="button" :class="{ active: mode === 'single' }" :aria-pressed="mode === 'single'" @click="setMode('single')">
+              <span>2</span>单图模式
+            </button>
+            <button type="button" :class="{ active: mode === 'inspiration' }" :aria-pressed="mode === 'inspiration'" @click="setMode('inspiration')">
+              <span>3</span>灵感模式
+            </button>
+            <button type="button" :class="{ active: mode === 'sku' }" :aria-pressed="mode === 'sku'" @click="setMode('sku')">
+              <span>4</span>SKU生成
+            </button>
+          </div>
         </div>
-      </header>
+      </div>
+    </header>
 
-      <main v-if="activePage === 'templates'" class="gallery-main">
+    <section v-show="mode === 'batch'" class="batch-surface" aria-label="批量模式 1">
+      <main v-show="editing" class="editor-shell">
+        <iframe v-if="editing" :key="editorUrl" class="editor-frame" :src="editorUrl" :title="`${currentTemplateName}编辑器`" allow="download" />
+      </main>
+
+      <div v-show="!editing" class="gallery-shell">
+        <main v-if="activePage === 'templates'" class="gallery-main">
         <div class="page-head">
           <h1>模板列表</h1>
           <span class="count">{{ templates.length }} 个模板<span class="count-separator" aria-hidden="true">/</span>每套 5 张竖版主图</span>
@@ -238,9 +286,9 @@ onUnmounted(() => {
             </figure>
           </div>
         </section>
-      </main>
+        </main>
 
-      <main v-else class="gallery-main my-templates-main">
+        <main v-else class="gallery-main my-templates-main">
         <div class="page-head">
           <div>
             <h1>我的模板</h1>
@@ -281,7 +329,26 @@ onUnmounted(() => {
             </div>
           </article>
         </section>
-      </main>
-    </div>
+        </main>
+      </div>
+    </section>
+
+    <section v-show="mode === 'single'" class="single-surface" aria-label="单图模式 2">
+      <SingleImageMode />
+    </section>
+
+    <section v-show="mode === 'inspiration'" class="inspiration-surface" aria-label="灵感模式 3">
+      <InspirationMode />
+    </section>
+
+    <section v-show="mode === 'sku'" class="sku-surface" aria-label="SKU生成 4">
+      <iframe
+        v-if="skuMounted"
+        class="sku-frame"
+        src="/sku/index.html"
+        title="SKU生成工作台"
+        allow="clipboard-read; clipboard-write"
+      />
+    </section>
   </div>
 </template>

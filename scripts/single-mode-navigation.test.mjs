@@ -1,0 +1,31 @@
+import assert from 'node:assert/strict'
+import { readFile } from 'node:fs/promises'
+
+const singleMode = await readFile(new URL('../src/components/SingleImageMode.vue', import.meta.url), 'utf8')
+const editor = await readFile(new URL('../public/legacy/editor.html', import.meta.url), 'utf8')
+
+assert.doesNotMatch(singleMode, /class="single-subnav"/, 'the extra mode-2 navigation row must be removed from every stage')
+assert.match(singleMode, /\.legacy-single-editor-page \{[\s\S]*height: calc\(100vh - 68px\)/, 'the editor must use the space released by the removed row')
+assert.match(singleMode, /\.single-workspace \{[\s\S]*min-height: calc\(100vh - 68px\)/, 'the workbench must use the space released by the removed row')
+assert.match(singleMode, /projectCount: projects\.value\.length/, 'the editor must receive the single-project count')
+assert.match(singleMode, /message\.type === 'single-editor-show-projects'[\s\S]*await showProjects\(\)/, 'the toolbar project entry must open the project list')
+assert.match(singleMode, /class="canvas-projects-button"[\s\S]*@click="showProjects"[\s\S]*我的单图项目/, 'the mask workspace header must expose the project list action')
+assert.match(singleMode, /\.canvas-projects-button:focus-visible/, 'the workspace project action must retain a visible keyboard focus state')
+assert.match(singleMode, /async function returnToCrop\(\)[\s\S]*stage\.value = 'crop'[\s\S]*setCropSource\(rawImage\.value, cropSelection\.value\)/, 'the mask workspace must restore the original image and saved crop selection before returning to crop')
+assert.match(singleMode, /function leaveGenerateStage\(\)[\s\S]*embeddedRefine[\s\S]*returnToCrop\(\)/, 'the shared mask workspace must route its back action to the correct parent flow')
+assert.match(singleMode, /class="canvas-back-button"[\s\S]*:disabled="isGenerating \|\| \(!embeddedRefine && !hasRawImage\)"[\s\S]*@click="leaveGenerateStage"[\s\S]*返回上一步/, 'the ordinary mask workspace must retain a guarded return-to-crop action')
+assert.match(singleMode, /\.canvas-back-button:focus-visible/, 'the return-to-crop action must retain a visible keyboard focus state')
+assert.match(singleMode, /class="enter-editor-button"[\s\S]*:disabled="!hasImage \|\| isGenerating"[\s\S]*@click="initializeEditor\(true\)"/, 'a cropped base image must be allowed to enter the editor without a generated history version')
+assert.doesNotMatch(singleMode, /class="enter-editor-button"[\s\S]*:disabled="!history\.length \|\| isGenerating"/, 'editor entry must not require an API-generated history version')
+assert.match(singleMode, /input\[type="range"\][\s\S]*appearance: none;[\s\S]*::-webkit-slider-runnable-track[\s\S]*height: 6px;[\s\S]*::-moz-range-thumb/, 'single-mode range controls must use the shared cross-browser studio slider style')
+assert.match(singleMode, /input\[type="range"\]:focus-visible/, 'range controls must retain a visible keyboard focus state')
+assert.match(editor, /document\.querySelector\("\.toolbar"\)\.appendChild\(propertiesToggle\);[\s\S]*document\.querySelector\("\.toolbar"\)\.appendChild\(singleModeNav\)/, 'mode-2 navigation must be appended after Properties')
+assert.match(editor, /id="singleWorkspaceNav"[\s\S]*工作台[\s\S]*id="singleProjectsNav"[\s\S]*我的单图项目/, 'the relocated toolbar must contain both navigation actions')
+assert.match(editor, /single-editor-show-workspace/, 'the workbench action must message the single-mode shell')
+assert.match(editor, /single-editor-show-projects/, 'the project action must message the single-mode shell')
+assert.match(editor, /\$\("templateTitle"\)\.textContent="单图项目"/, 'the single-board editor header must use the stable project label')
+assert.doesNotMatch(editor, /\$\("templateTitle"\)\.textContent=`单图项目 · \$\{message\.projectName/, 'the single-board editor header must not expose the uploaded image name')
+assert.match(editor, /<section id="boardUtilities"[\s\S]*id="selectedNote"[\s\S]*id="exportCurrent"[\s\S]*<\/section>/, 'current-board controls and export must remain one complete utility group')
+assert.match(editor, /aside\.appendChild\(cp\);[\s\S]*if\(singleMode\)aside\.appendChild\(\$\("boardUtilities"\)\)/, 'single mode must place board utilities after all add-content panels')
+
+console.log('single mode navigation tests passed')

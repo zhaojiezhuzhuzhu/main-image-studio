@@ -1,0 +1,195 @@
+<svg xmlns="http://www.w3.org/2000/svg"><symbol id="sofa" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><path d="M4.25 11.5v-2A1.5 1.5 0 0 1 5.75 8h12.5a1.5 1.5 0 0 1 1.5 1.5v2"/><rect x="1.75" y="11.5" width="2.5" height="4.25" rx="0.9"/><rect x="19.75" y="11.5" width="2.5" height="4.25" rx="0.9"/><path d="M4.25 13.25h15.5M4.25 15.75h15.5M4.25 15.75v1.5M19.75 15.75v1.5"/></symbol><symbol id="sofa-combination" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><path d="M3.75 11.5V10a1.5 1.5 0 0 1 1.5-1.5H16a1.5 1.5 0 0 1 1.5 1.5v2"/><rect x="1.75" y="11.5" width="2" height="4.5" rx="0.8"/><path d="M3.75 13.5h9.5M3.75 16h9.5M3.75 16v1.25M17.5 12h.5a1.25 1.25 0 0 1 1.25 1.25"/><rect x="14.75" y="14.25" width="8" height="4" rx="1"/><path d="M16 18.25v1M21.5 18.25v1"/></symbol><symbol id="footstool" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><rect x="3.25" y="10" width="17.5" height="5.875" rx="1.6"/><path d="M5 15.875V17.5M19 15.875V17.5"/></symbol><symbol id="sofa-bed" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 5.25h1.75a1 1 0 0 1 .94.66L8.6 12.5h12.65a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H6.35a1.5 1.5 0 0 1-1.41-.99L2.56 6.59a1 1 0 0 1 .94-1.34Z"/><path d="M6 16.5V18M20.5 16.5V18"/></symbol><symbol id="soft-bed" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><path d="M4.75 10.25v-4.5A1.75 1.75 0 0 1 6.5 4h11a1.75 1.75 0 0 1 1.75 1.75v4.5"/><path d="M6.25 10.25v-2a.75.75 0 0 1 .75-.75h3.5a.75.75 0 0 1 .75.75v2M12.75 10.25v-2a.75.75 0 0 1 .75-.75H17a.75.75 0 0 1 .75.75v2"/><path d="M4.75 10.25h14.5l1.95 6.8q.3 1.2-.95 1.2H3.75q-1.25 0-.95-1.2Z"/><path d="M4.25 18.25v1.5M19.75 18.25v1.5"/></symbol><symbol id="office-chair" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="3" width="8" height="9.5" rx="1.6"/><rect x="6" y="12.5" width="12" height="3" rx="1.25"/><path d="M6 14.5H4.75L3.5 9.5h1.75M18 14.5h1.25l1.25-5h-1.75M8.25 15.5l-2 5M15.75 15.5l2 5"/></symbol><symbol id="dining-table" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6.75" width="20" height="2.5" rx="1"/><path d="M4.25 9.25V18.5M19.75 9.25V18.5"/></symbol><symbol id="round-table" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="7.5" rx="10" ry="2.1"/><path d="M12 9.6v9.15M7.25 18.75h9.5"/></symbol><symbol id="recliner" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><path d="M8 12.25 4.75 5.8a1 1 0 0 1 .9-1.45H7.5a1 1 0 0 1 .9.56l3.1 6.34"/><rect x="7.5" y="11.25" width="10" height="6.5" rx="1.5"/><path d="M17.5 13.25h1l4 2.8a.8.8 0 0 1 .15 1.13l-.55.65a.8.8 0 0 1-1.08.14l-3.52-2.47M9 17.75v1.5M16 17.75v1.5"/></symbol><symbol id="dining-chair" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="4.25" width="10" height="4.25" rx="1.3"/><path d="M10 8.5V12M14 8.5V12"/><rect x="6.5" y="12" width="11" height="2.5" rx="1"/><path d="M7.5 14.5l-.75 6M16.5 14.5l.75 6"/></symbol><symbol id="coffee-table" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="10" width="20" height="3" rx="1.25"/><path d="M4 13v4.25M20 13v4.25"/></symbol><symbol id="tv-cabinet" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="9" width="20" height="6.5" rx="1.2"/><path d="M8.5 9v6.5M15.5 9v6.5M3.5 15.5v1.75M20.5 15.5v1.75"/></symbol><symbol id="nightstand" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><rect x="4.8" y="4.2" width="14.4" height="13.8" rx="1.68"/><path d="M4.8 11.1h14.4M6.3 18v1.75M17.7 18v1.75"/></symbol><symbol id="wardrobe" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2.75" width="14" height="17.75" rx="1.3"/><path d="M9.67 2.75V20.5M14.33 2.75V20.5M6.25 20.5v1M17.75 20.5v1"/></symbol><symbol id="sideboard" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="12" rx="1.35"/><path d="M3 10.5h18M12 10.5V18M4.5 18v1.75M19.5 18v1.75"/></symbol><symbol id="bookcase" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="2.75" width="10" height="17.75" rx="1.2"/><path d="M7 9.5h10M7 15h10M9.5 6v3.5M12 6.75V9.5M8.25 20.5v1M15.75 20.5v1"/></symbol><symbol id="desk" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6.5" width="20" height="2.5" rx="1"/><path d="M3.5 9v9.75a1 1 0 0 0 1 1h4a1 1 0 0 0 1-1V9M3.5 14.25h6M20.5 9v11.5M4.5 19.75v1M8.5 19.75v1"/></symbol><symbol id="drawer-chest" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5.5" width="18" height="13" rx="1.35"/><path d="M3 9.83h18M3 14.17h18M12 5.5v13M4.5 18.5v1.75M19.5 18.5v1.75"/></symbol>
+  <symbol id="mattress" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round">
+    <path d="m2 10 14-5 6 4-14 5Z M2 10v3.5l6 4 14-5V9 M8 14v3.5"/>
+    <path d="m7 10 8-2.8 M10 12l8-2.8"/>
+  </symbol>
+  <symbol id="mattress-double" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round">
+    <path d="m2 9 14-5 6 4-14 5Z M2 9v5l6 4 14-5V8 M8 13v5 M2 11.5l6 4 14-5"/>
+    <path d="m7 9 8-2.8 M10 11l8-2.8"/>
+  </symbol>
+  <symbol id="pillow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M3 5.5Q12 8 21 5.5q-2 6.5 0 13Q12 16 3 18.5q2-6.5 0-13Z"/>
+    <path d="M6 9q6 1.5 12 0 M6 15q6-1.5 12 0"/>
+  </symbol>
+  <symbol id="soft-bed-combination" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M3.5 10V6A1.5 1.5 0 0 1 5 4.5h7A1.5 1.5 0 0 1 13.5 6v4 M5.5 10V8h6v2 M3.5 10h10l1.5 6H2Z M2 16v2h13v-2 M3 18v1.5 M14 18v1.5"/>
+    <rect x="17.5" y="12" width="5" height="6" rx=".8"/>
+    <path d="M17.5 15h5 M19 18v1.5 M21 18v1.5"/>
+  </symbol>
+  <symbol id="soft-bed-multi-combination" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M3 11V7a1.5 1.5 0 0 1 1.5-1.5h6A1.5 1.5 0 0 1 12 7v4 M5 11V9h5v2 M3 11h9l1.5 5.5h-12Z M1.5 16.5v2h12v-2 M3 18.5V20 M12 18.5V20"/>
+    <rect x="16" y="4.5" width="6.5" height="3.5" rx=".8"/>
+    <rect x="16" y="10.5" width="6.5" height="3.5" rx=".8"/>
+    <rect x="16.5" y="16.5" width="5.5" height="3.5" rx=".6"/>
+  </symbol>
+  <symbol id="computer-chair" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="8" y="3" width="8" height="9" rx="2"/>
+    <rect x="6" y="12" width="12" height="3" rx="1.2"/>
+    <path d="M6 13.5H4V10h2 M18 13.5h2V10h-2 M12 15v5 M6 21l6-1 6 1 M6 21v1 M12 20v2 M18 21v1"/>
+  </symbol>
+  <symbol id="ergonomic-chair" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M9 3h6 M12 3v3"/>
+    <rect x="8" y="6" width="8" height="8" rx="2"/>
+    <path d="M5 12v5h14v-5 M12 14v7 M7 22l5-1 5 1"/>
+  </symbol>
+  <symbol id="study-chair" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="6" y="4" width="4.5" height="7" rx="1"/>
+    <rect x="13.5" y="4" width="4.5" height="7" rx="1"/>
+    <path d="M8.25 11v4 M15.75 11v4 M5 15h14 M12 15v6 M6 21h12"/>
+  </symbol>
+  <symbol id="standing-desk" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="2" y="7" width="20" height="2.5" rx=".8"/>
+    <path d="M5 9.5V14h2V9.5 M6 14v6 M3 20h6 M17 9.5V14h2V9.5 M18 14v6 M15 20h6 M12 2v3 M10.5 3.5 12 2l1.5 1.5"/>
+  </symbol>
+  <symbol id="standing-desk-combination" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="2" y="7" width="20" height="2.5" rx=".8"/>
+    <path d="M4 9.5V20 M20 9.5V20 M12 2v3 M10.5 3.5 12 2l1.5 1.5"/>
+    <rect x="9" y="12.5" width="6" height="5" rx="1"/>
+    <path d="M10 17.5V21 M14 17.5V21"/>
+  </symbol>
+  <symbol id="study-desk" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M5 8V4h14v4"/>
+    <rect x="2.5" y="8" width="19" height="2.5" rx=".8"/>
+    <path d="M5 10.5V20 M19 10.5V20"/>
+  </symbol>
+  <symbol id="study-desk-combination" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M5 8V4h14v4"/>
+    <rect x="2.5" y="8" width="19" height="2.5" rx=".8"/>
+    <path d="M5 10.5V20 M19 10.5V20"/>
+    <rect x="9" y="13.5" width="6" height="4.5" rx="1"/>
+    <path d="M10 18v3 M14 18v3"/>
+  </symbol>
+  <symbol id="lifting-side-table" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round">
+    <path d="m3 7 11-3 5 3-11 3Z M3 7v2.5l5 3 11-3V7 M11 11.7V17h2v-6 M12 17v3 M6 21l6-1 6 1 M21.5 11v7 M20 12.5l1.5-1.5 1.5 1.5 M20 16.5l1.5 1.5 1.5-1.5"/>
+  </symbol>
+  <symbol id="dining-table-combination" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="4.5" y="8" width="15" height="2.5" rx=".8"/>
+    <path d="M7 10.5v9 M17 10.5v9 M1.5 11v5h4 M2.5 16v4 M22.5 11v5h-4 M21.5 16v4 M8 5.5V4h3v1.5 M14 5.5V4h3v1.5"/>
+  </symbol>
+  <symbol id="round-table-combination" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round">
+    <ellipse cx="12" cy="9" rx="7.5" ry="2.5"/>
+    <path d="M12 11.5V20 M8.5 20h7 M1.5 11v5h4 M2.5 16v4 M22.5 11v5h-4 M21.5 16v4 M10 4.5V3h4v1.5"/>
+  </symbol>
+  <symbol id="wood-nightstand" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M3.5 5h17 M5 5v13h14V5 M5 11.5h14 M10.5 8h3 M10.5 14.5h3 M6 18v2 M18 18v2"/>
+  </symbol>
+  <symbol id="shoe-cabinet" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="4" y="3" width="16" height="17" rx="1"/>
+    <path d="M4 11.5h16 M6 20v1.5 M18 20v1.5 M10 6h4 M10 14.5h4 M7 8.5h10 M7 17h10"/>
+  </symbol>
+  <symbol id="shaped-vanity" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M8 9h2.5a2 2 0 0 0 2-2V5.5H21V11M8 13h13M8 11h14v3H8zM20 14v7M10.5 14v6M14 11v3"/>
+    <rect x="2" y="13" width="6" height="8" rx="1"/><path d="M5 16v2"/>
+  </symbol>
+  <symbol id="functional-sofa" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M4 11V7a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v4 M2 11v5h20v-5 M4 12h16 M12 6v6 M4 16l-1.5 3h7l1-3 M13.5 16l1 3h7L20 16"/>
+  </symbol>
+  <symbol id="nightstand-pair" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="2" y="6" width="8" height="12" rx="1.5"/><rect x="14" y="6" width="8" height="12" rx="1.5"/>
+    <path d="M2 12h8 M14 12h8 M3.5 18v2 M8.5 18v2 M15.5 18v2 M20.5 18v2"/>
+  </symbol>
+  <symbol id="pillow-pair" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M6 4q8 2 16 0-2 5 0 10 M2 10q8 2 16 0-2 5 0 10-8-2-16 0 2-5 0-10Z"/>
+  </symbol>
+  <symbol id="wood-bed" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M4 10V4h16v6 M4 7h16 M4 10h16l1.5 7h-19Z M4 17v3 M20 17v3"/>
+  </symbol>
+  <symbol id="wood-bed-combination" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M3 11V5h10v6 M3 8h10 M3 11h10l1 6H2Z M3 17v3 M13 17v3"/>
+    <rect x="17" y="12" width="5" height="7" rx=".5"/><path d="M17 15.5h5"/>
+  </symbol>
+  <symbol id="wood-bed-multi-combination" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M3 11V5h9v6 M3 8h9 M3 11h9l1.5 6h-12Z M3 17v3 M12 17v3"/>
+    <rect x="16" y="5" width="6.5" height="3.5" rx=".5"/><rect x="16" y="11" width="6.5" height="3.5" rx=".5"/><rect x="17" y="17" width="5.5" height="3.5" rx=".5"/>
+  </symbol>
+  <symbol id="wardrobe-combination" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="2" y="3" width="9" height="17" rx=".8"/><rect x="13" y="3" width="9" height="17" rx=".8"/>
+    <path d="M6.5 3v17 M17.5 3v17 M3 20v1 M21 20v1"/>
+  </symbol>
+  <symbol id="wardrobe-side-cabinet" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="2" y="3" width="12" height="17" rx=".8"/><rect x="16.5" y="8" width="5.5" height="12" rx=".8"/>
+    <path d="M8 3v17 M16.5 13h5.5 M3 20v1 M21 20v1"/>
+  </symbol>
+  <symbol id="side-cabinet" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="6" y="4" width="12" height="15" rx=".8"/><path d="M6 10h12 M9 7h2 M15 13v3 M7 19v2 M17 19v2"/>
+  </symbol>
+  <symbol id="shoe-cabinet-tall" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="5" y="2.5" width="14" height="18" rx=".8"/><path d="M5 8h14 M5 13h14 M12 2.5V8 M12 13v7.5 M6.5 20.5V22 M17.5 20.5V22"/>
+  </symbol>
+  <symbol id="shoe-cabinet-combination" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="2" y="3" width="10" height="17" rx=".8"/><rect x="14" y="11" width="8" height="9" rx=".8"/>
+    <path d="M2 8h10 M2 14h10 M14 15.5h8 M3 20v1 M21 20v1"/>
+  </symbol>
+  <symbol id="vanity-dresser" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M2 8h20v3H12 M21 11v10"/><rect x="2" y="11" width="10" height="9" rx=".8"/><path d="M2 15.5h10"/>
+  </symbol>
+  <symbol id="vanity-dresser-combination" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M16 8V5a2.5 2.5 0 0 1 5 0v3Z M2 11h20 M22 11v10"/>
+    <rect x="2" y="11" width="9" height="9" rx=".5"/><path d="M2 15.5h9 M14 17h6 M15 17v4 M19 17v4"/>
+  </symbol>
+  <symbol id="shaped-vanity-combination" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="18" cy="5" r="3"/><path d="M18 8v3 M8 11h14v3H8 M21 14v7"/>
+    <rect x="2" y="12" width="6" height="9" rx=".8"/><path d="M11 18h7 M12 18v3 M17 18v3"/>
+  </symbol>
+  <symbol id="vanity-mirror" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M6 15V8a6 6 0 0 1 12 0v7Z M12 15v5 M8 20h8"/>
+  </symbol>
+  <symbol id="vanity-stool" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round">
+    <ellipse cx="12" cy="8" rx="7" ry="2.5"/><path d="M5 8v7c0 3.5 14 3.5 14 0V8 M7 17v3 M17 17v3"/>
+  </symbol>
+  <symbol id="drawer-chest-combination" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="2" y="4" width="8" height="16" rx=".8"/><rect x="12" y="10" width="10" height="10" rx=".8"/>
+    <path d="M2 9h8 M2 14h8 M12 15h10 M3 20v1 M21 20v1"/>
+  </symbol>
+  <symbol id="desk-combination" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="2" y="6" width="20" height="2.5" rx=".8"/><path d="M3 8.5V20h5V8.5 M3 14h5 M21 8.5V21"/>
+    <rect x="12" y="12" width="5" height="5" rx="1"/><path d="M13 17v4 M16 17v4"/>
+  </symbol>
+  <symbol id="desk-multi-combination" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="2" y="3" width="5" height="18" rx=".5"/><path d="M2 9h5 M2 15h5 M9 10h13 M10 10v11 M21 10v11"/>
+    <rect x="13" y="13" width="5" height="4" rx=".8"/><path d="M14 17v4 M17 17v4"/>
+  </symbol>
+  <symbol id="dining-table-mixed-combination" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="3" y="9" width="18" height="2.5" rx=".8"/><path d="M5 11.5V20 M19 11.5V20 M7 6V4h4v2 M14 6V4h4v2 M8 17h8 M9 17v4 M15 17v4"/>
+  </symbol>
+  <symbol id="round-table-mixed-combination" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round">
+    <ellipse cx="12" cy="9" rx="7" ry="2.5"/><path d="M12 11.5V20 M9 20h6 M10 4V2.5h4V4 M2 12v5h4 M3 17v4"/>
+    <rect x="19" y="13" width="3.5" height="4" rx="1"/><path d="M20 17v4 M22 17v4"/>
+  </symbol>
+  <symbol id="dining-bench" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="2" y="8" width="20" height="2.5" rx=".6"/><path d="M5 10.5 4 19 M19 10.5l1 8.5 M4.5 15h15"/>
+  </symbol>
+  <symbol id="standing-desk-two-piece" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="2" y="10" width="20" height="2.5" rx=".8"/><path d="M4 12.5V21 M20 12.5V21 M8 7V5h8v2"/>
+  </symbol>
+  <symbol id="standing-desk-three-piece" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="2" y="10" width="20" height="2.5" rx=".8"/><path d="M4 12.5V21 M20 12.5V21 M8 7V5h8v2"/>
+    <rect x="9" y="15" width="6" height="3.5" rx=".8"/><path d="M10 18.5V22 M14 18.5V22"/>
+  </symbol>
+  <symbol id="monitor-riser" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round">
+    <path d="m2 10 15-3 5 3-15 3Z M4 11.2V17 M19 11.5V16 M7 13v5"/>
+  </symbol>
+  <symbol id="dining-chair-pair" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="3" y="5" width="6" height="5" rx="1"/><rect x="15" y="5" width="6" height="5" rx="1"/>
+    <path d="M6 10v4 M2 14h8 M3 14v6 M9 14v6 M18 10v4 M14 14h8 M15 14v6 M21 14v6"/>
+  </symbol>
+  <symbol id="detail-image" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M10 20H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v5 M3 16l5-5 3 3"/>
+    <circle cx="7" cy="7" r="1"/><circle cx="16" cy="16" r="4"/><path d="m19 19 3 3"/>
+  </symbol>
+  <symbol id="material-image" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round">
+    <path d="m2 7 10-4 10 4-10 4Z M2 12l10 4 10-4 M2 17l10 4 10-4"/>
+  </symbol>
+  <symbol id="template-single" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="4" y="4" width="16" height="16" rx="2"/>
+  </symbol>
+  <symbol id="template-combination" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="9" y="9" width="12" height="12" rx="2"/><path d="M6 15H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v1"/>
+  </symbol>
+  <symbol id="arrow-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M5 12h14 M13 6l6 6-6 6"/>
+  </symbol>
+  <symbol id="download" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M12 3v12 M7 10l5 5 5-5 M4 16v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"/>
+  </symbol>
+</svg>

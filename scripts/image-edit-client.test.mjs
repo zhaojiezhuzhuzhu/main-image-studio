@@ -1,0 +1,47 @@
+import assert from 'node:assert/strict'
+import {
+  appendHiddenPromptConstraint,
+  appendInspirationConstraint,
+  appendReferenceConstraint,
+  DEFAULT_INSPIRATION_PROMPT,
+  HIDDEN_INSPIRATION_CONSTRAINT,
+  HIDDEN_PROMPT_CONSTRAINT,
+  HIDDEN_REFERENCE_CONSTRAINT
+} from '../src/services/imageEdit.js'
+
+assert.equal(
+  appendHiddenPromptConstraint('改柜子'),
+  `改柜子，${HIDDEN_PROMPT_CONSTRAINT}`
+)
+
+assert.equal(
+  appendHiddenPromptConstraint('  改柜子。  '),
+  `改柜子。${HIDDEN_PROMPT_CONSTRAINT}`
+)
+
+assert.equal(
+  appendHiddenPromptConstraint(`改柜子，${HIDDEN_PROMPT_CONSTRAINT}`),
+  `改柜子，${HIDDEN_PROMPT_CONSTRAINT}`
+)
+
+assert.equal(
+  appendReferenceConstraint('改柜子', true),
+  `改柜子，${HIDDEN_PROMPT_CONSTRAINT}，${HIDDEN_REFERENCE_CONSTRAINT}`
+)
+
+assert.equal(
+  appendReferenceConstraint('改柜子', false),
+  `改柜子，${HIDDEN_PROMPT_CONSTRAINT}`
+)
+
+assert.equal(
+  appendInspirationConstraint('温暖的奶油风客厅'),
+  `温暖的奶油风客厅。${DEFAULT_INSPIRATION_PROMPT}，${HIDDEN_INSPIRATION_CONSTRAINT}`
+)
+
+assert.equal(
+  appendInspirationConstraint(''),
+  `${DEFAULT_INSPIRATION_PROMPT}，${HIDDEN_INSPIRATION_CONSTRAINT}`
+)
+
+console.log('image-edit client prompt tests passed')

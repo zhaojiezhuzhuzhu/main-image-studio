@@ -241,12 +241,12 @@ window.SOFA_TEMPLATE2_DATA={
       }
     ],
     "gold": {
-      "x": 1064,
-      "y": 241,
-      "w": 282,
-      "h": 76,
+      "x": 1066,
+      "y": 243,
+      "w": 279,
+      "h": 73,
       "text": "坐感升级",
-      "raster": "portrait2-gold.png"
+      "raster": null
     },
     "outline": null
   },
@@ -324,7 +324,7 @@ window.SOFA_TEMPLATE2_DATA={
       "w": 282,
       "h": 76,
       "text": "支撑升级",
-      "raster": "portrait3-gold.png"
+      "raster": null
     },
     "outline": null
   },
