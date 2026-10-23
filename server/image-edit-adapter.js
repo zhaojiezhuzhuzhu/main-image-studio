@@ -175,17 +175,14 @@ async function resolveImageDataUrl(item, signal) {
   return `data:${contentType};base64,${bytes.toString('base64')}`
 }
 
-export function imageEditAdapterPlugin(options = {}) {
+export function createImageEditHandler(options = {}) {
   const baseUrl = normalizeBaseUrl(options.baseUrl)
   const model = String(options.model || DEFAULT_MODEL).trim()
   const inspirationModel = String(options.inspirationModel || DEFAULT_INSPIRATION_MODEL).trim()
   const apiKey = String(options.apiKey || '').trim()
   const upstreamTimeoutMs = Math.max(30_000, Number(options.timeoutMs) || DEFAULT_UPSTREAM_TIMEOUT_MS)
 
-  return {
-    name: 'image-edit-adapter',
-    configureServer(server) {
-      server.middlewares.use('/api/image-edit', async (request, response, next) => {
+  return async function handleImageEdit(request, response, next = () => {}) {
         if (request.method === 'GET' && String(request.url || '').endsWith('/status')) {
           sendJson(response, apiKey ? 200 : 503, {
             configured: Boolean(apiKey),
@@ -283,7 +280,15 @@ export function imageEditAdapterPlugin(options = {}) {
         } finally {
           clearTimeout(timeout)
         }
-      })
+  }
+}
+
+export function imageEditAdapterPlugin(options = {}) {
+  const handler = createImageEditHandler(options)
+  return {
+    name: 'image-edit-adapter',
+    configureServer(server) {
+      server.middlewares.use('/api/image-edit', handler)
     }
   }
 }

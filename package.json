@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "node scripts/build-reference-library.mjs && vite build",
+    "build:reference-library": "node scripts/build-reference-library.mjs",
     "preview": "vite preview",
     "test:image-edit-client": "node scripts/image-edit-client.test.mjs",
     "test:image-edit-adapter": "node scripts/image-edit-adapter.test.mjs",
@@ -18,6 +19,7 @@
     "test:header-alignment": "node scripts/header-alignment.test.mjs",
     "test:template-store": "node scripts/template-store.test.mjs",
     "test:reference-library": "node scripts/reference-library.test.mjs",
+    "test:vercel-api": "node scripts/vercel-api.test.mjs",
     "test:reference-placement": "node scripts/reference-placement.test.mjs",
     "test:reference-prompt-default": "node scripts/reference-prompt-default.test.mjs",
     "test:workspace-project-actions": "node scripts/workspace-project-actions.test.mjs",

@@ -4,6 +4,7 @@ dist/
 .env.*
 !.env.example
 密钥.txt
+public/reference-library/
 .playwright-cli/
 .tmp-layers/
 outputs/
