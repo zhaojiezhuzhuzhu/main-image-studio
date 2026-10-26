@@ -115,7 +115,13 @@ function sendJson(response, statusCode, payload) {
 }
 
 function normalizeBaseUrl(value) {
-  return String(value || DEFAULT_BASE_URL).trim().replace(/\/+$/, '')
+  const normalized = String(value || DEFAULT_BASE_URL).trim().replace(/\/+$/, '')
+  return normalized === 'https://4stoken.com/v1' ? DEFAULT_BASE_URL : normalized
+}
+
+function normalizeModel(value, fallback) {
+  const normalized = String(value || fallback).trim()
+  return normalized === 'gpt-image-2-c' ? 'gpt-image-2' : normalized
 }
 
 async function readRequestBody(request) {
@@ -177,8 +183,8 @@ async function resolveImageDataUrl(item, signal) {
 
 export function createImageEditHandler(options = {}) {
   const baseUrl = normalizeBaseUrl(options.baseUrl)
-  const model = String(options.model || DEFAULT_MODEL).trim()
-  const inspirationModel = String(options.inspirationModel || DEFAULT_INSPIRATION_MODEL).trim()
+  const model = normalizeModel(options.model, DEFAULT_MODEL)
+  const inspirationModel = normalizeModel(options.inspirationModel, DEFAULT_INSPIRATION_MODEL)
   const apiKey = String(options.apiKey || '').trim()
   const upstreamTimeoutMs = Math.max(30_000, Number(options.timeoutMs) || DEFAULT_UPSTREAM_TIMEOUT_MS)
 

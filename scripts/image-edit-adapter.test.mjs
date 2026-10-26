@@ -42,8 +42,10 @@ let adapterHandler
 imageEditAdapterPlugin({
   baseUrl: `http://127.0.0.1:${upstreamPort}/v1`,
   apiKey: 'test-key',
-  model: 'gpt-image-2',
-  inspirationModel: 'gpt-image-2'
+  // Existing deployments may still have the former alias saved in their
+  // environment variables. The adapter must migrate it transparently.
+  model: 'gpt-image-2-c',
+  inspirationModel: 'gpt-image-2-c'
 }).configureServer({
   middlewares: {
     use(path, handler) {
