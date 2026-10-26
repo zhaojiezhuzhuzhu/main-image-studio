@@ -2,9 +2,9 @@ import { randomUUID } from 'node:crypto'
 import { lookup } from 'node:dns/promises'
 import https from 'node:https'
 
-const DEFAULT_BASE_URL = 'https://4stoken.com/v1'
-const DEFAULT_MODEL = 'gpt-image-2-c'
-const DEFAULT_INSPIRATION_MODEL = 'gpt-image-2-c'
+const DEFAULT_BASE_URL = 'https://api.4stoken.cn/v1'
+const DEFAULT_MODEL = 'gpt-image-2'
+const DEFAULT_INSPIRATION_MODEL = 'gpt-image-2'
 const DEFAULT_UPSTREAM_TIMEOUT_MS = 600_000
 const TRUSTED_DOH_HOST = 'dns.alidns.com'
 const TRUSTED_DOH_IP = '223.5.5.5'
@@ -231,8 +231,10 @@ export function createImageEditHandler(options = {}) {
           upstreamForm.set('model', requestMode === 'inspiration' ? inspirationModel : model)
           upstreamForm.set('prompt', prompt)
           if (referenceImage instanceof Blob) {
-            upstreamForm.append('image[]', image, image.name || 'selection.png')
-            upstreamForm.append('image[]', referenceImage, referenceImage.name || 'reference.png')
+            // 4SToken follows the OpenAI Images multipart convention: multiple
+            // inputs repeat the same `image` field instead of using `image[]`.
+            upstreamForm.append('image', image, image.name || 'selection.png')
+            upstreamForm.append('image', referenceImage, referenceImage.name || 'reference.png')
           } else {
             upstreamForm.set('image', image, image.name || 'selection.png')
           }
