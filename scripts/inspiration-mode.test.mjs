@@ -41,6 +41,10 @@ for (const ratio of ['3:2', '2:3', '4:3', '9:16', '16:9']) {
 }
 
 assert.match(inspiration, /distanceFromWhite/, 'the white background must be converted into an editable API mask')
+assert.match(inspiration, /pixels\.data\[index \+ 3\] = protection/, 'the inspiration source must use the mask as its alpha matte')
+assert.match(inspiration, /imageContext\.putImageData\(pixels, 0, 0\)/, 'the transparent product matte must be written back before upload')
+assert.match(imageEdit, /preserveAlpha: promptMode === 'inspiration'/, 'inspiration upload compression must preserve the source alpha channel')
+assert.match(imageEdit, /preserveAlpha \? 'image\/webp' : 'image\/jpeg'/, 'transparent inspiration sources must use compact alpha-capable WebP')
 assert.match(inspiration, /generateController = new AbortController\(\)/, 'generation must be cancellable')
 
 console.log('inspiration mode tests passed')

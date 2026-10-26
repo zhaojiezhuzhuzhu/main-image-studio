@@ -11,6 +11,7 @@ import {
 } from '../src/services/imageEdit.js'
 
 assert.equal(MAX_IMAGE_EDIT_REQUEST_BYTES, 4 * 1024 * 1024)
+assert.match(HIDDEN_INSPIRATION_CONSTRAINT, /禁止保留矩形白底、灰底、边框或贴片效果/)
 
 assert.equal(
   appendHiddenPromptConstraint('改柜子'),

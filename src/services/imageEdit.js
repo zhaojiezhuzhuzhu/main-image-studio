@@ -1,7 +1,7 @@
 export const HIDDEN_PROMPT_CONSTRAINT = '不改变构图和非调整的区域'
 export const HIDDEN_REFERENCE_CONSTRAINT = '参考第二张图片的材质、颜色、造型或风格，只修改第一张图片的蒙版区域，严格保持第一张图片原有构图、透视、物体位置和比例'
 export const DEFAULT_INSPIRATION_PROMPT = '保持图1产品结构不变，参考图2的场景，生成图1产品的场景，光影融合自然，摄影棚电商风格'
-export const HIDDEN_INSPIRATION_CONSTRAINT = '第一张图片是需要保留的商品白底图，保持商品主体的结构、比例、颜色、材质和细节不变；参考第二张图片的场景、构图、光影和氛围生成完整电商主图，只替换第一张图片的白色背景并自然融合商品'
+export const HIDDEN_INSPIRATION_CONSTRAINT = '第一张图片是需要保留的商品白底图，保持商品主体的结构、比例、颜色、材质和细节不变；参考第二张图片的场景、构图、光影和氛围生成完整电商主图，只替换第一张图片的白色背景并自然融合商品；第一张图片的透明或白色画布不是场景，成图中禁止保留矩形白底、灰底、边框或贴片效果'
 export const MAX_IMAGE_EDIT_REQUEST_BYTES = 4 * 1024 * 1024
 
 function uploadFileName(blob, baseName) {
@@ -10,7 +10,7 @@ function uploadFileName(blob, baseName) {
   return `${baseName}.png`
 }
 
-async function optimizeReferenceRequestImage(blob, { maxEdge, quality }) {
+async function optimizeReferenceRequestImage(blob, { maxEdge, quality, preserveAlpha = false }) {
   if (!(blob instanceof Blob) || typeof document === 'undefined' || typeof Image === 'undefined') return blob
   const objectUrl = URL.createObjectURL(blob)
   try {
@@ -27,13 +27,15 @@ async function optimizeReferenceRequestImage(blob, { maxEdge, quality }) {
     canvas.width = Math.max(1, Math.round(image.naturalWidth * scale))
     canvas.height = Math.max(1, Math.round(image.naturalHeight * scale))
     const context = canvas.getContext('2d')
-    context.fillStyle = '#fff'
-    context.fillRect(0, 0, canvas.width, canvas.height)
+    if (!preserveAlpha) {
+      context.fillStyle = '#fff'
+      context.fillRect(0, 0, canvas.width, canvas.height)
+    }
     context.drawImage(image, 0, 0, canvas.width, canvas.height)
     return await new Promise((resolve, reject) => {
       canvas.toBlob(
         result => result ? resolve(result) : reject(new Error('图片压缩失败。')),
-        'image/jpeg',
+        preserveAlpha ? 'image/webp' : 'image/jpeg',
         quality
       )
     })
@@ -87,9 +89,13 @@ export async function requestImageEdit({ imageBlob, maskBlob, referenceImageBlob
   let requestReferenceImageBlob = referenceImageBlob
   if (referenceImageBlob) {
     [requestImageBlob, requestReferenceImageBlob] = await Promise.all([
-      // Preserve the source dimensions so the PNG mask still aligns exactly,
-      // but encode the photo efficiently for Vercel's request body limit.
-      optimizeReferenceRequestImage(imageBlob, { maxEdge: Number.POSITIVE_INFINITY, quality: 0.84 }),
+      // Inspiration mode depends on a transparent product matte. WebP keeps
+      // that alpha channel while remaining small enough for Vercel.
+      optimizeReferenceRequestImage(imageBlob, {
+        maxEdge: Number.POSITIVE_INFINITY,
+        quality: 0.9,
+        preserveAlpha: promptMode === 'inspiration'
+      }),
       optimizeReferenceRequestImage(referenceImageBlob, { maxEdge: 1024, quality: 0.84 })
     ])
   }

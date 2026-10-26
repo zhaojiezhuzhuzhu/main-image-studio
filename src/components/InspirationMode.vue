@@ -248,7 +248,12 @@ async function createInspirationPayload() {
     mask.data[index + 1] = 255
     mask.data[index + 2] = 255
     mask.data[index + 3] = protection
+    // Use the same matte for the source image itself. This prevents the
+    // image model from treating the original white canvas as a rectangular
+    // object when more than one result is requested.
+    pixels.data[index + 3] = protection
   }
+  imageContext.putImageData(pixels, 0, 0)
   maskContext.putImageData(mask, 0, 0)
 
   const referenceScale = Math.min(1, OUTPUT_LONG_EDGE / Math.max(reference.naturalWidth, reference.naturalHeight))
