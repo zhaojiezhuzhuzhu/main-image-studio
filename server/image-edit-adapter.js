@@ -247,7 +247,7 @@ export function createImageEditHandler(options = {}) {
           upstreamForm.set('mask', mask, mask.name || 'mask.png')
           upstreamForm.set('n', '1')
           upstreamForm.set('size', '1024x1024')
-          upstreamForm.set('response_format', 'b64_json')
+          upstreamForm.set('output_format', 'png')
 
           let upstream
           try {
