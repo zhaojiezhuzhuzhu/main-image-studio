@@ -25,13 +25,12 @@ const upstream = createServer(async (request, response) => {
     headers: { 'Content-Type': request.headers['content-type'] },
     body
   }).formData()
-  assert.equal(form.get('model'), 'gpt-image-2')
+  assert.equal(form.get('model'), 'gpt-image-2-c')
   assert.equal(form.get('prompt'), 'change the color')
-  assert.equal(form.get('output_format'), 'png')
-  assert.equal(form.get('response_format'), null)
-  assert.equal(form.getAll('image').length, 2)
-  assert.ok(form.getAll('image').every(image => image instanceof Blob))
-  assert.equal(form.getAll('image[]').length, 0)
+  assert.equal(form.get('response_format'), 'b64_json')
+  assert.equal(form.get('image'), null)
+  assert.equal(form.getAll('image[]').length, 2)
+  assert.ok(form.getAll('image[]').every(image => image instanceof Blob))
   assert.ok(form.get('mask') instanceof Blob)
   upstreamReceived = true
   response.setHeader('Content-Type', 'application/json')
@@ -43,8 +42,6 @@ let adapterHandler
 imageEditAdapterPlugin({
   baseUrl: `http://127.0.0.1:${upstreamPort}/v1`,
   apiKey: 'test-key',
-  // Existing deployments may still have the former alias saved in their
-  // environment variables. The adapter must migrate it transparently.
   model: 'gpt-image-2-c',
   inspirationModel: 'gpt-image-2-c'
 }).configureServer({

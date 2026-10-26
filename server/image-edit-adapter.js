@@ -2,9 +2,9 @@ import { randomUUID } from 'node:crypto'
 import { lookup } from 'node:dns/promises'
 import https from 'node:https'
 
-const DEFAULT_BASE_URL = 'https://api.4stoken.cn/v1'
-const DEFAULT_MODEL = 'gpt-image-2'
-const DEFAULT_INSPIRATION_MODEL = 'gpt-image-2'
+const DEFAULT_BASE_URL = 'https://4stoken.com/v1'
+const DEFAULT_MODEL = 'gpt-image-2-c'
+const DEFAULT_INSPIRATION_MODEL = 'gpt-image-2-c'
 const DEFAULT_UPSTREAM_TIMEOUT_MS = 600_000
 const TRUSTED_DOH_HOST = 'dns.alidns.com'
 const TRUSTED_DOH_IP = '223.5.5.5'
@@ -115,13 +115,7 @@ function sendJson(response, statusCode, payload) {
 }
 
 function normalizeBaseUrl(value) {
-  const normalized = String(value || DEFAULT_BASE_URL).trim().replace(/\/+$/, '')
-  return normalized === 'https://4stoken.com/v1' ? DEFAULT_BASE_URL : normalized
-}
-
-function normalizeModel(value, fallback) {
-  const normalized = String(value || fallback).trim()
-  return normalized === 'gpt-image-2-c' ? 'gpt-image-2' : normalized
+  return String(value || DEFAULT_BASE_URL).trim().replace(/\/+$/, '')
 }
 
 async function readRequestBody(request) {
@@ -183,8 +177,8 @@ async function resolveImageDataUrl(item, signal) {
 
 export function createImageEditHandler(options = {}) {
   const baseUrl = normalizeBaseUrl(options.baseUrl)
-  const model = normalizeModel(options.model, DEFAULT_MODEL)
-  const inspirationModel = normalizeModel(options.inspirationModel, DEFAULT_INSPIRATION_MODEL)
+  const model = String(options.model || DEFAULT_MODEL).trim()
+  const inspirationModel = String(options.inspirationModel || DEFAULT_INSPIRATION_MODEL).trim()
   const apiKey = String(options.apiKey || '').trim()
   const upstreamTimeoutMs = Math.max(30_000, Number(options.timeoutMs) || DEFAULT_UPSTREAM_TIMEOUT_MS)
 
@@ -237,17 +231,15 @@ export function createImageEditHandler(options = {}) {
           upstreamForm.set('model', requestMode === 'inspiration' ? inspirationModel : model)
           upstreamForm.set('prompt', prompt)
           if (referenceImage instanceof Blob) {
-            // 4SToken follows the OpenAI Images multipart convention: multiple
-            // inputs repeat the same `image` field instead of using `image[]`.
-            upstreamForm.append('image', image, image.name || 'selection.png')
-            upstreamForm.append('image', referenceImage, referenceImage.name || 'reference.png')
+            upstreamForm.append('image[]', image, image.name || 'selection.png')
+            upstreamForm.append('image[]', referenceImage, referenceImage.name || 'reference.png')
           } else {
             upstreamForm.set('image', image, image.name || 'selection.png')
           }
           upstreamForm.set('mask', mask, mask.name || 'mask.png')
           upstreamForm.set('n', '1')
           upstreamForm.set('size', '1024x1024')
-          upstreamForm.set('output_format', 'png')
+          upstreamForm.set('response_format', 'b64_json')
 
           let upstream
           try {
