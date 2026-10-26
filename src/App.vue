@@ -233,7 +233,7 @@ onUnmounted(() => {
               <span>1</span>批量模式
             </button>
             <button type="button" :class="{ active: mode === 'single' }" :aria-pressed="mode === 'single'" @click="setMode('single')">
-              <span>2</span>单图模式
+              <span>2</span>主图测试
             </button>
             <button type="button" :class="{ active: mode === 'inspiration' }" :aria-pressed="mode === 'inspiration'" @click="setMode('inspiration')">
               <span>3</span>灵感模式
@@ -333,7 +333,7 @@ onUnmounted(() => {
       </div>
     </section>
 
-    <section v-show="mode === 'single'" class="single-surface" aria-label="单图模式 2">
+    <section v-show="mode === 'single'" class="single-surface" aria-label="主图测试 2">
       <SingleImageMode />
     </section>
 
