@@ -79,7 +79,8 @@ assert.match(editor, /it\.kind==="templateOutline"&&it\.componentId&&!it\.groupI
 assert.match(editor, /box\.addEventListener\("input",\(\)=>\{if\(!freeEdit\)return;it\.text=box\.value;reflowEditableItem\(b,it\);layoutFreeTextEditor\(b,it,box\);render\(b\);drawOutline\(b\)\}\)/, 'inline component editing must reflow the outline frame and editor while the user types')
 assert.match(editor, /function finishFree\(commit\)[\s\S]*it\.text=original;reflowEditableItem\(b,it\)[\s\S]*pushHistory\(\);it\.text=value/, 'live inline editing must preserve cancel and undo behavior')
 assert.match(editor, /bar\.addEventListener\("input"[\s\S]*data-prop="text"[\s\S]*reflowEditableItem\(ref\.b,it\)/, 'property-panel text input must reflow component frames immediately')
-assert.match(editor, /freeEdit\?\.it===it&&it\.kind==="text"/, 'canvas text must be hidden while the matching live editor is visible')
+assert.match(editor, /freeEdit\?\.it===it&&\(it\.kind==="text"\|\|it\.kind==="sleepMode"\)/, 'canvas text and sleep-mode artwork must be hidden while the matching live editor is visible')
 assert.match(editor, /function layoutFreeTextEditor\(b,it,box\)[\s\S]*whiteSpace=framed\?"nowrap"/, 'framed component editors must stay on one line and follow the text width')
+assert.match(editor, /box\.style\.color=it\.kind==="sleepMode"\?"#0D0D0D":it\.style\.color\|\|"#0D0D0D"/, 'sleep mode must use high-contrast black copy while its white-text component is being edited')
 
 console.log('component preset tests passed')

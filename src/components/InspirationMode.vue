@@ -1,6 +1,6 @@
 <script setup>
 import { computed, onUnmounted, ref } from 'vue'
-import { ArrowLeft, ArrowRight, Download, EditPen, MagicStick, Picture, RefreshRight, UploadFilled } from '@element-plus/icons-vue'
+import { ArrowLeft, ArrowRight, Download, EditPen, MagicStick, Minus, Picture, Plus, RefreshRight, UploadFilled } from '@element-plus/icons-vue'
 import { ElMessage } from 'element-plus'
 import { requestImageEdit } from '../services/imageEdit.js'
 import SingleImageMode from './SingleImageMode.vue'
@@ -12,6 +12,11 @@ const RATIOS = [
   { key: '3:4', value: 3 / 4 }
 ]
 const IMAGE_COUNTS = [1, 2, 3, 4]
+const RESULT_ZOOM_MIN = 40
+const RESULT_ZOOM_MAX = 100
+const RESULT_ZOOM_STEP = 5
+const RESULT_COMPACT_ZOOM = 75
+const RESULT_FIT_ZOOM = 100
 
 const productInput = ref(null)
 const referenceInput = ref(null)
@@ -39,6 +44,7 @@ const isPreparingLocalEdit = ref(false)
 const draggingTarget = ref('')
 const workspaceStage = ref('generate')
 const refineSeed = ref(null)
+const resultZoom = ref(RESULT_COMPACT_ZOOM)
 
 let generateController = null
 
@@ -60,6 +66,15 @@ function clearResults() {
   generationProgress.value = 0
   workspaceStage.value = 'generate'
   refineSeed.value = null
+  resultZoom.value = RESULT_COMPACT_ZOOM
+}
+
+function setResultZoom(value) {
+  resultZoom.value = Math.max(RESULT_ZOOM_MIN, Math.min(RESULT_ZOOM_MAX, Math.round(Number(value) || RESULT_ZOOM_MIN)))
+}
+
+function zoomResult(direction) {
+  setResultZoom(resultZoom.value + direction * RESULT_ZOOM_STEP)
 }
 
 async function startRefiningActiveResult() {
@@ -489,13 +504,34 @@ onUnmounted(() => generateController?.abort())
           <button type="button" class="inspiration-download-button" aria-label="下载当前图片" @click="downloadResult()"><Download /><span>下载当前图片</span></button>
         </div>
       </div>
-      <div class="inspiration-canvas-stage" :class="{ empty: !activeResult }">
+      <div
+        class="inspiration-canvas-stage"
+        :class="{ empty: !activeResult }"
+        :style="activeResult ? { '--result-preview-scale': `${resultZoom}%` } : undefined"
+      >
         <div v-if="!activeResult" class="inspiration-placeholder">
           <span><MagicStick aria-hidden="true" /></span>
           <strong>上传两张图片并生成灵感图</strong>
           <p>白底图决定商品主体，参考图提供场景、构图与光影方向。</p>
         </div>
-        <img v-else :src="activeResult.imageDataUrl" :alt="`生成的灵感图 ${activeResultIndex + 1}`" />
+        <img v-else :src="activeResult.imageDataUrl" :alt="`生成的灵感图 ${activeResultIndex + 1}`" draggable="false" />
+        <div v-if="activeResult" class="inspiration-zoom-toolbar" role="group" aria-label="生成图显示大小">
+          <button type="button" aria-label="缩小生成图" title="缩小" :disabled="resultZoom <= RESULT_ZOOM_MIN" @click="zoomResult(-1)"><Minus aria-hidden="true" /></button>
+          <input
+            id="inspiration-result-zoom"
+            v-model.number="resultZoom"
+            type="range"
+            :min="RESULT_ZOOM_MIN"
+            :max="RESULT_ZOOM_MAX"
+            :step="RESULT_ZOOM_STEP"
+            aria-label="生成图显示缩放"
+          />
+          <output for="inspiration-result-zoom">{{ resultZoom }}%</output>
+          <button type="button" aria-label="放大生成图" title="放大" :disabled="resultZoom >= RESULT_ZOOM_MAX" @click="zoomResult(1)"><Plus aria-hidden="true" /></button>
+          <span class="inspiration-zoom-divider" aria-hidden="true"></span>
+          <button type="button" class="inspiration-zoom-preset" :class="{ active: resultZoom === RESULT_COMPACT_ZOOM }" @click="setResultZoom(RESULT_COMPACT_ZOOM)">小窗</button>
+          <button type="button" class="inspiration-zoom-preset primary" :class="{ active: resultZoom === RESULT_FIT_ZOOM }" @click="setResultZoom(RESULT_FIT_ZOOM)">适合窗口</button>
+        </div>
         <div v-if="isGenerating" class="inspiration-generating" role="status" aria-live="polite">
           <span class="inspiration-spinner" aria-hidden="true"></span>
           <strong>正在生成第 {{ Math.min(generationProgress + 1, imageCount) }}/{{ imageCount }} 张</strong>
@@ -511,8 +547,8 @@ onUnmounted(() => generateController?.abort())
 </template>
 
 <style scoped>
-.inspiration-workspace { min-height: calc(100vh - 68px); display: grid; grid-template-columns: 360px minmax(0, 1fr); background: var(--menu-studio); color: #eaf6f5; }
-.inspiration-controls { min-width: 0; padding: 22px; background: var(--menu-studio); overflow-y: auto; scrollbar-gutter: stable; }
+.inspiration-workspace { height: calc(100vh - 69px); height: calc(100dvh - 69px); min-height: 0; display: grid; grid-template-columns: 360px minmax(0, 1fr); overflow: hidden; background: var(--menu-studio); color: #eaf6f5; }
+.inspiration-controls { min-width: 0; min-height: 0; padding: 22px; background: var(--menu-studio); overflow-y: auto; scrollbar-gutter: stable; }
 .inspiration-controls { border-right: 1px solid var(--menu-studio-line); }
 .inspiration-heading { display: flex; align-items: flex-start; gap: 12px; }
 .inspiration-heading > span { display: inline-grid; place-items: center; min-width: 31px; height: 23px; border-radius: 5px; background: var(--accent-bright); color: #123d3b; font: 700 11px/1 Montserrat, sans-serif; }
@@ -552,7 +588,7 @@ onUnmounted(() => generateController?.abort())
 .inspiration-ratios button:hover:not(:disabled), .inspiration-counts button:hover:not(:disabled) { border-color: #73928f; }
 .inspiration-ratios button.active, .inspiration-counts button.active { border-color: var(--accent-bright); background: #183f42; color: var(--accent-bright); }
 .inspiration-ratios button:disabled, .inspiration-counts button:disabled { cursor: not-allowed; opacity: .48; }
-.inspiration-ratios button:focus-visible, .inspiration-counts button:focus-visible, .inspiration-generate-button:focus-visible, .inspiration-cancel-button:focus-visible, .inspiration-download-button:focus-visible, .inspiration-result-nav:focus-visible, .inspiration-refine-button:focus-visible, .inspiration-regenerate-button:focus-visible { outline: 2px solid #c9fff6; outline-offset: 2px; }
+.inspiration-ratios button:focus-visible, .inspiration-counts button:focus-visible, .inspiration-generate-button:focus-visible, .inspiration-cancel-button:focus-visible, .inspiration-download-button:focus-visible, .inspiration-result-nav:focus-visible, .inspiration-refine-button:focus-visible, .inspiration-regenerate-button:focus-visible, .inspiration-zoom-toolbar button:focus-visible, .inspiration-zoom-toolbar input:focus-visible { outline: 2px solid #c9fff6; outline-offset: 2px; }
 .inspiration-field-error { margin: 8px 0 0; color: #ffaaa1; font-size: 11px; line-height: 1.5; }
 .inspiration-inline-error { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; margin-top: 14px; padding: 10px; border: 1px solid rgba(255, 115, 95, .45); border-radius: 6px; background: rgba(179, 49, 45, .15); color: #ffc0b8; font-size: 11px; line-height: 1.5; }
 .inspiration-inline-error button { border: 0; background: transparent; color: #fff; cursor: pointer; text-decoration: underline; }
@@ -579,7 +615,23 @@ onUnmounted(() => generateController?.abort())
 .inspiration-result-nav { width: 32px; padding: 0; }
 .inspiration-result-nav svg { width: 14px; height: 14px; }
 .inspiration-canvas-stage { position: relative; min-height: 0; display: grid; place-items: center; padding: 38px; overflow: auto; scrollbar-gutter: stable; }
-.inspiration-canvas-stage > img { display: block; max-width: 100%; max-height: 100%; object-fit: contain; border: 1px solid #d4dfe3; background: #fff; box-shadow: 0 18px 48px rgba(20, 34, 42, .18); }
+.inspiration-canvas-stage > img { position: absolute; top: 50%; left: 50%; display: block; width: auto; height: var(--result-preview-scale, 75%); max-width: var(--result-preview-scale, 75%); object-fit: contain; border: 1px solid #d4dfe3; background: #fff; box-shadow: 0 18px 48px rgba(20, 34, 42, .18); transform: translate(-50%, -50%); transition: width .16s ease, height .16s ease; user-select: none; }
+.inspiration-zoom-toolbar { position: absolute; right: 20px; bottom: 18px; z-index: 3; min-height: 46px; display: flex; align-items: center; gap: 7px; padding: 6px 8px; border: 1px solid rgba(117, 144, 160, .5); border-radius: 13px; background: rgba(17, 26, 35, .94); box-shadow: 0 12px 30px rgba(18, 31, 45, .22); color: #e4f1f0; backdrop-filter: blur(12px); }
+.inspiration-zoom-toolbar button { min-width: 30px; height: 30px; display: inline-grid; place-items: center; padding: 0 8px; border: 1px solid transparent; border-radius: 7px; background: transparent; color: #d7e5e6; font-size: 11px; font-weight: 600; cursor: pointer; }
+.inspiration-zoom-toolbar button:hover:not(:disabled) { border-color: #526970; background: #263745; color: #fff; }
+.inspiration-zoom-toolbar button:disabled { cursor: not-allowed; opacity: .38; }
+.inspiration-zoom-toolbar button > svg { width: 14px; height: 14px; }
+.inspiration-zoom-toolbar input { width: 126px; height: 18px; margin: 0; appearance: none; -webkit-appearance: none; background: transparent; accent-color: var(--accent-bright); cursor: pointer; }
+.inspiration-zoom-toolbar input::-webkit-slider-runnable-track { height: 6px; border-radius: 999px; background: #5d6e79; }
+.inspiration-zoom-toolbar input::-webkit-slider-thumb { width: 15px; height: 15px; margin-top: -4.5px; appearance: none; -webkit-appearance: none; border: 0; border-radius: 50%; background: var(--accent-bright); box-shadow: 0 0 0 1px rgba(16, 32, 38, .35); }
+.inspiration-zoom-toolbar input::-moz-range-track { height: 6px; border: 0; border-radius: 999px; background: #5d6e79; }
+.inspiration-zoom-toolbar input::-moz-range-thumb { width: 15px; height: 15px; border: 0; border-radius: 50%; background: var(--accent-bright); box-shadow: 0 0 0 1px rgba(16, 32, 38, .35); }
+.inspiration-zoom-toolbar output { min-width: 39px; color: #f1f9f8; font: 700 10px/1 Montserrat, sans-serif; text-align: right; }
+.inspiration-zoom-divider { width: 1px; height: 22px; background: #40535d; }
+.inspiration-zoom-toolbar .inspiration-zoom-preset { min-width: 44px; }
+.inspiration-zoom-toolbar .inspiration-zoom-preset.primary { min-width: 76px; background: var(--accent-bright); color: #123d3b; }
+.inspiration-zoom-toolbar .inspiration-zoom-preset.active { border-color: var(--accent-bright); color: var(--accent-bright); }
+.inspiration-zoom-toolbar .inspiration-zoom-preset.primary.active { color: #123d3b; box-shadow: inset 0 0 0 1px rgba(18, 61, 59, .2); }
 .inspiration-placeholder { max-width: 390px; display: flex; flex-direction: column; align-items: center; gap: 10px; color: #6b7c84; text-align: center; }
 .inspiration-placeholder > span { width: 62px; height: 62px; display: grid; place-items: center; border: 1px dashed #afc0c7; border-radius: 12px; background: rgba(255, 255, 255, .76); color: #6a9b95; }
 .inspiration-placeholder svg { width: 27px; height: 27px; }
@@ -600,7 +652,7 @@ onUnmounted(() => generateController?.abort())
 }
 
 @media (max-width: 760px) {
-  .inspiration-workspace { display: block; min-height: calc(100vh - 60px); }
+  .inspiration-workspace { display: block; height: auto; min-height: calc(100vh - 60px); min-height: calc(100dvh - 60px); overflow: visible; }
   .inspiration-controls { overflow: visible; }
   .inspiration-controls { border-right: 0; border-bottom: 1px solid var(--menu-studio-line); }
   .inspiration-canvas-panel { min-height: 620px; grid-template-rows: 52px 1fr 36px; }
@@ -608,10 +660,14 @@ onUnmounted(() => generateController?.abort())
   .inspiration-canvas-head { gap: 8px; padding: 0 12px; }
   .inspiration-canvas-head > div:first-child { gap: 6px; }
   .inspiration-canvas-head > div:first-child > span:last-child { display: none; }
+  .inspiration-zoom-toolbar { right: 12px; bottom: 12px; left: 12px; justify-content: center; }
+  .inspiration-zoom-toolbar input { min-width: 76px; width: min(126px, 24vw); }
+  .inspiration-zoom-toolbar .inspiration-zoom-preset { display: none; }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .inspiration-drop-zone { transition: none; }
   .inspiration-spinner { animation-duration: 1.8s; }
+  .inspiration-canvas-stage > img { transition: none; }
 }
 </style>
